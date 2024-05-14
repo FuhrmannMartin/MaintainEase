@@ -2,6 +2,7 @@ package com.example.maintainease.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.maintainease.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -15,8 +16,8 @@ data class Maintenance(
     val date: Date?,
     val severity: String,
     val status: String,
-    val description: String
-
+    val description: String,
+    val picture: Int?
 )
 
 val locale = Locale("German", "Austria")
@@ -30,7 +31,8 @@ fun getMaintenance(): List<Maintenance> {
             date = dateFormat.parse("12.05.2024"),
             severity = "low",
             status = "open",
-            description = "Die Lampe muss ausgetauscht werden E27"
+            description = "Die Lampe muss ausgetauscht werden E27",
+            picture = R.drawable.lampe_task
         ),
         Maintenance(
             title = "Gelände lose",
@@ -38,7 +40,8 @@ fun getMaintenance(): List<Maintenance> {
             date = dateFormat.parse("13.05.2024"),
             severity = "high",
             status = "open",
-            description = "Das Gelände ist lose, gehen darauf ist sehr gefährlich"
+            description = "Das Gelände ist lose, gehen darauf ist sehr gefährlich",
+            picture = R.drawable.treppenhaus_task
         ),
         Maintenance(
             title = "Wand verschmutzt",
@@ -46,7 +49,8 @@ fun getMaintenance(): List<Maintenance> {
             date = dateFormat.parse("14.05.2024"),
             severity = "low",
             status = "open",
-            description = "Wand ist schmutzig, muss neu angestrichen werden."
+            description = "Wand ist schmutzig, muss neu angestrichen werden.",
+            picture = R.drawable.wand_task
         ),
         Maintenance(
             title = "Toilette veropft",
@@ -54,7 +58,8 @@ fun getMaintenance(): List<Maintenance> {
             date = dateFormat.parse("14.05.2024"),
             severity = "middle",
             status = "open",
-            description = "Bitte entsopfen"
+            description = "Bitte entsopfen",
+            picture = R.drawable.wc_task
         ),
         Maintenance(
             title = "Laser kaputt",
@@ -62,7 +67,8 @@ fun getMaintenance(): List<Maintenance> {
             date = dateFormat.parse("10.05.2024"),
             severity = "middle",
             status = "open",
-            description = "Laser im Labor ist kaputt, muss ausgetauscht werden"
+            description = "Laser im Labor ist kaputt, muss ausgetauscht werden",
+            picture = R.drawable.laser_task
         )
     )
 }

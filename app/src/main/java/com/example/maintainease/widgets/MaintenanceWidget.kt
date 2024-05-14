@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +31,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -72,7 +75,7 @@ fun MaintenanceTask(
             }, shape = ShapeDefaults.Large, elevation = CardDefaults.cardElevation(10.dp)
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
-            MaintenanceCardHeader()
+            MaintenanceCardHeader(maintenance = maintenance)
             MaintenanceDetails(maintenance = maintenance)
         }
     }
@@ -115,13 +118,19 @@ fun MaintenanceDetails(
 }
 
 @Composable
-fun MaintenanceCardHeader(
-) {
+fun MaintenanceCardHeader(maintenance: Maintenance) {
     Box(
         modifier = Modifier
             .height(150.dp)
-            .fillMaxWidth(), contentAlignment = Alignment.Center
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
     ) {
-
+        maintenance.picture?.let { picture ->
+            Image(
+                painter = painterResource(id = picture),
+                contentDescription = "Picture of Task",
+                contentScale = ContentScale.Crop
+            )
+        }
     }
 }
