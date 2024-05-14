@@ -18,26 +18,51 @@ data class Maintenance(
     val description: String
 
 )
+
 val locale = Locale("German", "Austria")
 val dateFormat = SimpleDateFormat("dd.MM.yyyy", locale)
 
 fun getMaintenance(): List<Maintenance> {
     return listOf(
         Maintenance(
-            title = "Job 1",
-            location = "Beispieladresse 234",
+            title = "Lampe Kaputt",
+            location = "2. Stock Raum A.101",
             date = dateFormat.parse("12.05.2024"),
-            severity = "high",
+            severity = "low",
             status = "open",
-            description = "Broken Window"
+            description = "Die Lampe muss ausgetauscht werden E27"
         ),
         Maintenance(
-            title = "Job 2",
-            location = "Beispieladresse 123",
+            title = "Gelände lose",
+            location = "Streppenhaus von Gebäude A, 1. Stock",
             date = dateFormat.parse("13.05.2024"),
+            severity = "high",
+            status = "open",
+            description = "Das Gelände ist lose, gehen darauf ist sehr gefährlich"
+        ),
+        Maintenance(
+            title = "Wand verschmutzt",
+            location = "1. Stock Raum B.022",
+            date = dateFormat.parse("14.05.2024"),
+            severity = "low",
+            status = "open",
+            description = "Wand ist schmutzig, muss neu angestrichen werden."
+        ),
+        Maintenance(
+            title = "Toilette veropft",
+            location = "4. Stock Raum C.01",
+            date = dateFormat.parse("14.05.2024"),
             severity = "middle",
-            status = "closed",
-            description = "Broken Window"
+            status = "open",
+            description = "Bitte entsopfen"
+        ),
+        Maintenance(
+            title = "Laser kaputt",
+            location = "5. Stock Raum D.104",
+            date = dateFormat.parse("10.05.2024"),
+            severity = "middle",
+            status = "open",
+            description = "Laser im Labor ist kaputt, muss ausgetauscht werden"
         )
     )
 }

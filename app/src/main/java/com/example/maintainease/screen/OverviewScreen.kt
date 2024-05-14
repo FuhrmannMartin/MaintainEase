@@ -1,5 +1,6 @@
 package com.example.maintainease.screen
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -19,7 +20,8 @@ import androidx.compose.runtime.getValue
 @Composable
 fun OverviewScreen(navController: NavController) {
     val context = LocalContext.current
-    val overviewScreenViewModel: OverviewScreenViewModel = viewModel(factory = InjectorUtils.provideOverviewScreenViewModelFactory(context))
+    val overviewScreenViewModel: OverviewScreenViewModel =
+        viewModel(factory = InjectorUtils.provideOverviewScreenViewModelFactory(context))
     val maintenances by overviewScreenViewModel.maintenances.collectAsState()
 
 
@@ -29,13 +31,15 @@ fun OverviewScreen(navController: NavController) {
         },
         bottomBar = {
             SimpleBottomAppBar(navController = navController)
-        }
+        },
     ) { innerPadding ->
-        ListOfMaintenanceTask(
-            modifier = Modifier.padding(innerPadding),
-            maintenance = maintenances,
-            navController = navController,
-            viewModel = overviewScreenViewModel
-        )
+        Box(modifier = Modifier.padding(innerPadding)) {
+            ListOfMaintenanceTask(
+                modifier = Modifier,
+                maintenance = maintenances,
+                navController = navController,
+                viewModel = overviewScreenViewModel
+            )
+        }
     }
 }

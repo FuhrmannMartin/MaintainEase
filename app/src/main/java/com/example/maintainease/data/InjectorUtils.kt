@@ -1,6 +1,7 @@
 package com.example.maintainease.data
 
 import android.content.Context
+import com.example.maintainease.NewTaskScreenViewModelFactory
 import com.example.maintainease.OverviewScreenViewModelFactory
 import com.example.maintainease.repositories.MaintenanceRepository
 
@@ -14,4 +15,10 @@ object InjectorUtils {
         val repository = getMovieRepository(context)
         return OverviewScreenViewModelFactory(repository)
     }
+
+    fun provideNewTaskScreenViewModelFactory(context: Context): NewTaskScreenViewModelFactory {
+        val repository = getMovieRepository(context)
+        return NewTaskScreenViewModelFactory(repository)
+    }
+
 }
