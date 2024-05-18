@@ -13,7 +13,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.maintainease.data.InjectorUtils
 import com.example.maintainease.viewModel.NewTaskScreenViewModel
-import com.example.maintainease.widgets.ListOfMaintenanceTask
 import com.example.maintainease.widgets.SimpleBottomAppBar
 import com.example.maintainease.widgets.SimpleTopAppBar
 
@@ -37,12 +36,6 @@ fun NewTaskScreen(
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             Text(text = "PLACEHOLDER")
-            ListOfMaintenanceTask(
-                modifier = Modifier,
-                maintenance = maintenances,
-                navController = navController,
-                viewModel = newTaskScreenViewModel
-            )
         }
     }
 }

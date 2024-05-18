@@ -30,11 +30,12 @@ import com.example.maintainease.NavigationHandling
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SimpleTopAppBar(title: String) {
+fun SimpleTopAppBar(title: String, navigationIcon: @Composable (() -> Unit)? = null) {
     TopAppBar(
-        modifier = Modifier
-            .fillMaxWidth(),
-        title = { Text(text = title) })
+        modifier = Modifier.fillMaxWidth(),
+        title = { Text(text = title) },
+        navigationIcon = navigationIcon ?: {}
+    )
 }
 
 @Composable

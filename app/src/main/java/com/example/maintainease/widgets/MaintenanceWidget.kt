@@ -36,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.example.maintainease.NavigationHandling
 import com.example.maintainease.data.Maintenance
 
 @Composable
@@ -51,7 +52,7 @@ fun ListOfMaintenanceTask(
         LazyColumn(modifier = Modifier.padding(bottom = 1.dp, start = 6.dp)) {
             try {
                 items(maintenance) { maintenanceItem ->
-                    MaintenanceTask(maintenance = maintenanceItem)
+                    MaintenanceTask(maintenance = maintenanceItem, navController = navController)
                     Spacer(modifier = Modifier.padding(4.dp))
                 }
             } catch (e: Exception) {
@@ -64,6 +65,7 @@ fun ListOfMaintenanceTask(
 @Composable
 fun MaintenanceTask(
     maintenance: Maintenance,
+    navController: NavController,
     onItemClick: (Int) -> Unit = {}
 ) {
     Card(
@@ -71,8 +73,10 @@ fun MaintenanceTask(
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 6.dp)
             .clickable {
-                onItemClick(maintenance.id)
-            }, shape = ShapeDefaults.Large, elevation = CardDefaults.cardElevation(10.dp)
+                navController.navigate(NavigationHandling.Detail.createRoute(maintenance.id))
+            },
+        shape = ShapeDefaults.Large,
+        elevation = CardDefaults.cardElevation(10.dp)
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
             MaintenanceCardHeader(maintenance = maintenance)
@@ -80,6 +84,8 @@ fun MaintenanceTask(
         }
     }
 }
+
+
 
 @Composable
 fun MaintenanceDetails(
@@ -127,6 +133,7 @@ fun MaintenanceCardHeader(maintenance: Maintenance) {
     ) {
         maintenance.picture?.let { picture ->
             Image(
+                modifier = Modifier.fillMaxWidth(),
                 painter = painterResource(id = picture),
                 contentDescription = "Picture of Task",
                 contentScale = ContentScale.Crop

@@ -20,4 +20,7 @@ interface MaintenanceDAO {
     @Transaction
     @Query("SELECT * FROM maintenance")
     fun getAllMaintenance(): List<Maintenance>
+
+    @Query("SELECT * FROM maintenance WHERE id = :taskId")
+    fun getMaintenanceById(taskId: Int): Maintenance?
 }
