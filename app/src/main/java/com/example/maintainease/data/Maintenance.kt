@@ -53,11 +53,11 @@ fun getMaintenance(): List<Maintenance> {
             picture = R.drawable.wand_task
         ),
         Maintenance(
-            title = "Toilette veropft",
+            title = "Toilette verstopft",
             location = "4. Stock Raum C.01",
             date = dateFormat.parse("14.05.2024"),
             severity = "middle",
-            status = "open",
+            status = "in progress",
             description = "Bitte entsopfen",
             picture = R.drawable.wc_task
         ),
@@ -66,7 +66,7 @@ fun getMaintenance(): List<Maintenance> {
             location = "5. Stock Raum D.104",
             date = dateFormat.parse("10.05.2024"),
             severity = "middle",
-            status = "open",
+            status = "done",
             description = "Laser im Labor ist kaputt, muss ausgetauscht werden",
             picture = R.drawable.laser_task
         )
