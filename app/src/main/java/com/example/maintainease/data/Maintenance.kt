@@ -58,7 +58,7 @@ fun getMaintenance(): List<Maintenance> {
             date = dateFormat.parse("14.05.2024"),
             severity = "middle",
             status = "in progress",
-            description = "Bitte entsopfen",
+            description = "Bitte entstopfen",
             picture = R.drawable.wc_task
         ),
         Maintenance(

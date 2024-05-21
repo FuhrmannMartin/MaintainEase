@@ -5,12 +5,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteDatabase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 
 @Database(
-    entities = [Maintenance::class],
+    entities = [Maintenance::class, Team::class, Staff::class],
     version = 4,
     exportSchema = false
 )
@@ -18,37 +21,49 @@ import kotlinx.coroutines.runBlocking
 @TypeConverters(DateRoomConverter::class)
 abstract class MaintenanceDB : RoomDatabase() {
     abstract fun maintenanceDAO(): MaintenanceDAO
+    abstract fun staffDAO(): StaffDAO
+    abstract fun teamDAO(): TeamDAO
 
-    fun populateDatabase() {
-        val dao = maintenanceDAO()
+    companion object {
+        @Volatile
+        private var Instance: MaintenanceDB? = null
 
-        val initialMovies = getMaintenance()
-
-        runBlocking(Dispatchers.IO) {
-            initialMovies.forEach { movie ->
-                val exists = dao.maintenanceExists(movie.title) > 0
-                if (!exists) {
-                    dao.addMaintenance(movie)
-                }
+        fun getDB(context: Context): MaintenanceDB {
+            return Instance ?: synchronized(this) {
+                Room.databaseBuilder(context, MaintenanceDB::class.java, "maintenance_db")
+                    .fallbackToDestructiveMigration()
+                    .addCallback(DatabaseCallback(context.applicationContext))
+                    .build()
+                    .also { Instance = it }
             }
         }
     }
 
-    companion object {
-        @Volatile
-        private var instance: MaintenanceDB? = null
+    private class DatabaseCallback(private val context: Context) : Callback() {
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
+            val scope = CoroutineScope(Dispatchers.IO)
+            scope.launch {
+                // Populate the database with initial data in the background
+                val maintenanceDAO = getDB(context).maintenanceDAO()
+                val staffDAO = getDB(context).staffDAO()
+                val teamDAO = getDB(context).teamDAO()
 
-        fun getDB(context: Context): MaintenanceDB {
-            val db = instance ?: synchronized(this) {
-                Room.databaseBuilder(context, MaintenanceDB::class.java, "maintenance_db")
-                    .fallbackToDestructiveMigration()
-                    .build()
-                    .also { instance = it }
+                val initialMaintenanceTasks = getMaintenance()
+                val initialStaff = getStaff()
+                val initialTeams = getTeam()
+
+
+                initialMaintenanceTasks.forEach { o ->
+                    maintenanceDAO.addMaintenance(o)
+                }
+                initialStaff.forEach { o ->
+                    staffDAO.addStaffMember(o)
+                }
+                initialTeams.forEach { o ->
+                    teamDAO.addTeam(o)
+                }
             }
-
-            db.populateDatabase()
-
-            return db
         }
     }
 }

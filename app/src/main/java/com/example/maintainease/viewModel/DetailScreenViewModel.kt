@@ -15,8 +15,7 @@ class DetailScreenViewModel(private val repository: MaintenanceRepository, taskI
 
     init {
         viewModelScope.launch {
-            repository.getAllMaintenance().collectLatest { maintenanceList ->
-                val maintenance = maintenanceList.find { it.id == taskId }
+            repository.getMaintenanceById(taskId).collectLatest { maintenance ->
                 _maintenance.value = maintenance
             }
         }

@@ -1,21 +1,18 @@
 package com.example.maintainease.repositories
 
-import android.util.Log
 import com.example.maintainease.data.Maintenance
 import com.example.maintainease.data.MaintenanceDAO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO) {
-    suspend fun getAllMaintenance(): Flow<List<Maintenance>> {
-        return flow {
-            val moviesWithImages = maintenanceDAO.getAllMaintenance()
-            Log.d("MaintenanceRepository", "Fetched ${moviesWithImages.size} maintenance tasks")
-            emit(moviesWithImages)
-        }.flowOn(Dispatchers.IO)
+    fun getAllMaintenance(): Flow<List<Maintenance>> {
+        return maintenanceDAO.getAllMaintenance()
+    }
+
+    fun getMaintenanceById(taskId: Int): Flow<Maintenance?> {
+        return maintenanceDAO.getMaintenanceById(taskId)
     }
 
     suspend fun update(maintenances: List<Maintenance>) {
