@@ -1,12 +1,21 @@
 package com.example.maintainease.repositories
 
+import androidx.room.Transaction
 import com.example.maintainease.data.Maintenance
 import com.example.maintainease.data.MaintenanceDAO
+import com.example.maintainease.data.Staff
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO) {
+
+    @Transaction
+    suspend fun addMaintenanceWithRelation(maintenance: Maintenance) {
+        val maintenanceId = maintenanceDAO.insertMaintenance(maintenance)
+        maintenanceDAO.insertStaffMaintenanceRelation(maintenanceId)
+    }
+
     fun getAllMaintenance(): Flow<List<Maintenance>> {
         return maintenanceDAO.getAllMaintenance()
     }
@@ -15,10 +24,8 @@ class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO) {
         return maintenanceDAO.getMaintenanceById(taskId)
     }
 
-    suspend fun update(maintenances: List<Maintenance>) {
-        withContext(Dispatchers.IO) {
-            maintenanceDAO.updateMaintenance(maintenances)
-        }
+    fun getAssigneeId(taskId: Int): Flow<Int?> {
+        return maintenanceDAO.getAssigneeId(taskId)
     }
 
     companion object {

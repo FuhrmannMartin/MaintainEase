@@ -6,14 +6,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.maintainease.repositories.MaintenanceRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 
 @Database(
-    entities = [Maintenance::class, Team::class, Staff::class],
+    entities = [Maintenance::class, Team::class, Staff::class,
+        TeamMaintenanceRelation::class, TeamStaffRelation::class, StaffMaintenanceRelation::class],
     version = 4,
     exportSchema = false
 )
@@ -53,9 +54,9 @@ abstract class MaintenanceDB : RoomDatabase() {
                 val initialStaff = getStaff()
                 val initialTeams = getTeam()
 
-
+                val maintenanceRepository = MaintenanceRepository(maintenanceDAO)
                 initialMaintenanceTasks.forEach { o ->
-                    maintenanceDAO.addMaintenance(o)
+                    maintenanceRepository.addMaintenanceWithRelation(o)
                 }
                 initialStaff.forEach { o ->
                     staffDAO.addStaffMember(o)
