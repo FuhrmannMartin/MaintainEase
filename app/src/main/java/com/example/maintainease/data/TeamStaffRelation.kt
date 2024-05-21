@@ -2,7 +2,6 @@ package com.example.maintainease.data
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "teamStaffRelation",
@@ -23,6 +22,6 @@ import androidx.room.PrimaryKey
     primaryKeys = ["stuffId", "teamId"]
 )
 class TeamStaffRelation(
-    val stuffId: Int,
+    val staffId: Int,
     val teamId: Int,
 )
