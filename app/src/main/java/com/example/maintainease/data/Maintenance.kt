@@ -8,7 +8,7 @@ import java.util.Date
 import java.util.Locale
 
 @Entity(tableName = "maintenance")
-data class Maintenance(
+class Maintenance(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val title: String,

@@ -22,7 +22,7 @@ import androidx.room.PrimaryKey
     ]    ,
     primaryKeys = ["stuffId", "teamId"]
 )
-data class TeamStaffRelation(
+class TeamStaffRelation(
     val stuffId: Int,
     val teamId: Int,
 )

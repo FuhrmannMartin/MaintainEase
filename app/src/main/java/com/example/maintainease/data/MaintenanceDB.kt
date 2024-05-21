@@ -54,7 +54,7 @@ abstract class MaintenanceDB : RoomDatabase() {
                 val initialStaff = getStaff()
                 val initialTeams = getTeam()
 
-                val maintenanceRepository = MaintenanceRepository(maintenanceDAO)
+                val maintenanceRepository = MaintenanceRepository(maintenanceDAO, staffDAO)
                 initialMaintenanceTasks.forEach { o ->
                     maintenanceRepository.addMaintenanceWithRelation(o)
                 }

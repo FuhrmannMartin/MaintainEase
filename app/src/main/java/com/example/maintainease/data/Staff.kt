@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "staff")
-data class Staff(
+class Staff(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,
@@ -22,4 +22,8 @@ fun getStaff(): List<Staff> {
             name = "Martin"
         )
     )
+}
+
+fun getCurrentUser(): String {
+    return "Martin"
 }

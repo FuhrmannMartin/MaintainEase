@@ -26,4 +26,10 @@ interface MaintenanceDAO {
     @Query("SELECT staffId FROM staffMaintenanceRelation WHERE maintenanceId = :taskId")
     fun getAssigneeId(taskId: Int): Flow<Int?>
 
+    @Query("SELECT * FROM staff WHERE id = :staffId")
+    fun getAssigneeById(staffId: Int): Flow<Staff?>
+
+    @Query("Update staffMaintenanceRelation set staffId = :staffId WHERE maintenanceId = :taskId")
+    suspend fun assignToMe(taskId: Int, staffId: Int)
+
 }

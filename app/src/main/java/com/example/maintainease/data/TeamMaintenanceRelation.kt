@@ -23,7 +23,7 @@ import androidx.room.PrimaryKey
     ],
     indices = [Index(value = ["maintenanceId"], unique = true)]
 )
-data class TeamMaintenanceRelation(
+class TeamMaintenanceRelation(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val maintenanceId: Int,
