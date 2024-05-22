@@ -15,7 +15,7 @@ class NewTaskScreenViewModel(private val repository: MaintenanceRepository) : Vi
 
     init {
         viewModelScope.launch {
-            repository.getAllMaintenance().collectLatest { maintenanceList ->
+            repository.getAllMaintenance()?.collectLatest { maintenanceList ->
                 _maintenances.value = maintenanceList
             }
         }

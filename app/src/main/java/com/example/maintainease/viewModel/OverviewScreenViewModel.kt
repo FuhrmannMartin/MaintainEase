@@ -14,11 +14,14 @@ import kotlinx.coroutines.launch
 
 class OverviewScreenViewModel(private val repository: MaintenanceRepository) : ViewModel() {
     private val _maintenances = MutableStateFlow<List<Maintenance>>(emptyList())
+    private val currentUser = repository.currentUser
 
     init {
         viewModelScope.launch {
-            repository.getAllMaintenance().collectLatest { maintenanceList ->
-                _maintenances.value = maintenanceList
+            if (currentUser["staffId"] != null) {
+                repository.getAllMaintenance()?.collectLatest { maintenanceList ->
+                    _maintenances.value = maintenanceList
+                }
             }
         }
     }
