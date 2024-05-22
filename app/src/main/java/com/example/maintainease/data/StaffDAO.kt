@@ -9,7 +9,7 @@ interface StaffDAO {
     @Insert
     suspend fun addStaffMember(staff: Staff)
 
-    @Query("SELECT * FROM staff WHERE name = :name")
-    suspend fun getStaffByName(name: String): Staff?
+    @Query("INSERT INTO teamStaffRelation (staffId, teamId) VALUES (:staffId, :teamId)")
+    suspend fun mapStaffToTeam(staffId: Int, teamId: Int)
 
 }

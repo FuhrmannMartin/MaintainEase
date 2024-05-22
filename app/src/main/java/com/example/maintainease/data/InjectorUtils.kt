@@ -9,7 +9,7 @@ import com.example.maintainease.repositories.MaintenanceRepository
 object InjectorUtils {
     private fun getMovieRepository(context: Context): MaintenanceRepository {
         val db = MaintenanceDB.getDB(context)
-        return MaintenanceRepository.getInstance(db.maintenanceDAO(), db.staffDAO())
+        return MaintenanceRepository.getInstance(db.maintenanceDAO(), db.staffDAO(), db.teamDAO())
     }
 
     fun provideOverviewScreenViewModelFactory(context: Context): OverviewScreenViewModelFactory {

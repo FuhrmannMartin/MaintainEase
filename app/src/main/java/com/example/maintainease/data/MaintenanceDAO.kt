@@ -17,19 +17,19 @@ interface MaintenanceDAO {
     @Update
     suspend fun updateMaintenance(maintenances: List<Maintenance>)
 
-    @Query("SELECT * FROM maintenance")
-    fun getAllMaintenance(): Flow<List<Maintenance>>
+    @Query("SELECT * FROM maintenance WHERE teamId = :teamId")
+    fun getAllMaintenance(teamId: Int): Flow<List<Maintenance>>
 
     @Query("SELECT * FROM maintenance WHERE id = :taskId")
     fun getMaintenanceById(taskId: Int): Flow<Maintenance?>
 
     @Query("SELECT staffId FROM staffMaintenanceRelation WHERE maintenanceId = :taskId")
-    fun getAssigneeId(taskId: Int): Flow<Int?>
+    fun getAssigneeIdForTask(taskId: Int): Flow<Int?>
 
     @Query("SELECT * FROM staff WHERE id = :staffId")
     fun getAssigneeById(staffId: Int): Flow<Staff?>
 
     @Query("Update staffMaintenanceRelation set staffId = :staffId WHERE maintenanceId = :taskId")
-    suspend fun assignToMe(taskId: Int, staffId: Int)
+    suspend fun mapTaskToStaff(taskId: Int, staffId: Int)
 
 }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -15,9 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -61,19 +58,22 @@ fun DetailScreen(
         }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
-            Divider(color = Color.Black, thickness = 1.dp)
             maintenanceTask?.let { maintenanceTask ->
                 MaintenanceTask(maintenance = maintenanceTask, navController = navController)
             }
             CustomDivider()
-            if (assignee?.name != getCurrentUser()) {
-                Button(onClick = { detailScreenViewModel.viewModelScope.launch { detailScreenViewModel.assignToMe() } }) {
-                    Text(text = "Assign to me")
-                }
+            if (assignee?.id == getCurrentUser()["staffId"]) {
+                Text(text = "Assigned to me!")
             } else {
-                Text(text = "Assignee: ${assignee?.name}")
+                if (assignee?.id == null) {
+                    Text(text = "Not assigned yet!")
+                    Button(onClick = { detailScreenViewModel.viewModelScope.launch { detailScreenViewModel.assignToMe() } }) {
+                        Text(text = "Assign to me")
+                    }
+                } else {
+                    Text(text = "Assigned to ${assignee?.name}!")
+                }
             }
-
         }
     }
 }

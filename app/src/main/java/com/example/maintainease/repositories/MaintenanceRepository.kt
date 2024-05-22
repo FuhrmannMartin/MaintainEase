@@ -5,12 +5,15 @@ import com.example.maintainease.data.Maintenance
 import com.example.maintainease.data.MaintenanceDAO
 import com.example.maintainease.data.Staff
 import com.example.maintainease.data.StaffDAO
+import com.example.maintainease.data.TeamDAO
+import com.example.maintainease.data.getCurrentUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 
-class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO, private val staffDAO: StaffDAO) {
+class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO, private val staffDAO: StaffDAO, private val teamDAO: TeamDAO) {
+    val currentUser = getCurrentUser()
 
     @Transaction
     suspend fun addMaintenanceWithRelation(maintenance: Maintenance) {
@@ -18,8 +21,8 @@ class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO, private 
         maintenanceDAO.insertStaffMaintenanceRelation(maintenanceId)
     }
 
-    fun getAllMaintenance(): Flow<List<Maintenance>> {
-        return maintenanceDAO.getAllMaintenance()
+    fun getAllMaintenance(): Flow<List<Maintenance>>? {
+        return currentUser["teamId"]?.let { maintenanceDAO.getAllMaintenance(it) }
     }
 
     fun getMaintenanceById(taskId: Int): Flow<Maintenance?> {
@@ -28,7 +31,7 @@ class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO, private 
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getAssignee(taskId: Int): Flow<Staff?> {
-        return maintenanceDAO.getAssigneeId(taskId).flatMapLatest { staffId ->
+        return maintenanceDAO.getAssigneeIdForTask(taskId).flatMapLatest { staffId ->
             if (staffId != null) {
                 maintenanceDAO.getAssigneeById(staffId)
             } else {
@@ -37,20 +40,17 @@ class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO, private 
         }
     }
 
-    suspend fun assignToMe(taskId: Int, name: String) {
-        val staff = staffDAO.getStaffByName(name)
-        if (staff != null) {
-            maintenanceDAO.assignToMe(taskId = taskId, staffId = staff.id)
-        }
+    suspend fun assignToMe(taskId: Int, staffId: Int) {
+        maintenanceDAO.mapTaskToStaff(taskId = taskId, staffId = staffId)
     }
 
     companion object {
         @Volatile
         private var instance: MaintenanceRepository? = null
 
-        fun getInstance(maintenanceDAO: MaintenanceDAO, staffDAO: StaffDAO): MaintenanceRepository {
+        fun getInstance(maintenanceDAO: MaintenanceDAO, staffDAO: StaffDAO, teamDAO: TeamDAO): MaintenanceRepository {
             return instance ?: synchronized(this) {
-                instance ?: MaintenanceRepository(maintenanceDAO, staffDAO).also { instance = it }
+                instance ?: MaintenanceRepository(maintenanceDAO, staffDAO, teamDAO).also { instance = it }
             }
         }
     }

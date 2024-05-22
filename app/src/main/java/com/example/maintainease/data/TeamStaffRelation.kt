@@ -18,8 +18,8 @@ import androidx.room.ForeignKey
             childColumns = ["staffId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]    ,
-    primaryKeys = ["stuffId", "teamId"]
+    ],
+    primaryKeys = ["staffId", "teamId"]
 )
 class TeamStaffRelation(
     val staffId: Int,

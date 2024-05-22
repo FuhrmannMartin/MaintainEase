@@ -3,14 +3,13 @@ package com.example.maintainease.screen
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -34,7 +33,6 @@ fun OverviewScreen(navController: NavController) {
     val doneMaintenances by overviewScreenViewModel.doneMaintenances.collectAsState()
     val cancelledMaintenances by overviewScreenViewModel.cancelledMaintenances.collectAsState()
 
-
     Scaffold(
         topBar = {
             SimpleTopAppBar(title = "MaintainEase")
@@ -44,7 +42,11 @@ fun OverviewScreen(navController: NavController) {
         },
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
-            Divider(color = Color.Black, thickness = 1.dp)
+            Text(
+                text = "Maintenance Tasks",
+                modifier = Modifier.padding(16.dp),
+                style = MaterialTheme.typography.headlineSmall // Use style instead of fontSize
+            )
             MaintenanceBox(
                 name =  "Open",
                 items = openMaintenances,

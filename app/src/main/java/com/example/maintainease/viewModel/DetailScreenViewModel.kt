@@ -31,8 +31,7 @@ class DetailScreenViewModel(private val repository: MaintenanceRepository, priva
     }
 
     suspend fun assignToMe() {
-        val name = getCurrentUser()
-        repository.assignToMe(taskId, name)
+        getCurrentUser()["staffId"]?.let { repository.assignToMe(taskId, it) }
     }
 
 }

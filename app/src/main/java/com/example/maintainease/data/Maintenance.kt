@@ -17,7 +17,8 @@ class Maintenance(
     val severity: String,
     val status: String,
     val description: String,
-    val picture: Int?
+    val picture: Int?,
+    val teamId: Int
 )
 
 val locale = Locale("German", "Austria")
@@ -32,7 +33,8 @@ fun getMaintenance(): List<Maintenance> {
             severity = "low",
             status = "open",
             description = "Die Lampe muss ausgetauscht werden E27",
-            picture = R.drawable.lampe_task
+            picture = R.drawable.lampe_task,
+            teamId = 1
         ),
         Maintenance(
             title = "Gelände lose",
@@ -41,7 +43,8 @@ fun getMaintenance(): List<Maintenance> {
             severity = "high",
             status = "open",
             description = "Das Gelände ist lose, gehen darauf ist sehr gefährlich",
-            picture = R.drawable.treppenhaus_task
+            picture = R.drawable.treppenhaus_task,
+            teamId = 1
         ),
         Maintenance(
             title = "Wand verschmutzt",
@@ -50,7 +53,8 @@ fun getMaintenance(): List<Maintenance> {
             severity = "low",
             status = "open",
             description = "Wand ist schmutzig, muss neu angestrichen werden.",
-            picture = R.drawable.wand_task
+            picture = R.drawable.wand_task,
+            teamId = 1
         ),
         Maintenance(
             title = "Toilette verstopft",
@@ -59,7 +63,8 @@ fun getMaintenance(): List<Maintenance> {
             severity = "middle",
             status = "in progress",
             description = "Bitte entstopfen",
-            picture = R.drawable.wc_task
+            picture = R.drawable.wc_task,
+            teamId = 1
         ),
         Maintenance(
             title = "Laser kaputt",
@@ -68,7 +73,18 @@ fun getMaintenance(): List<Maintenance> {
             severity = "middle",
             status = "done",
             description = "Laser im Labor ist kaputt, muss ausgetauscht werden",
-            picture = R.drawable.laser_task
+            picture = R.drawable.laser_task,
+            teamId = 1
+        ),
+        Maintenance(
+            title = "Laser kaputt",
+            location = "3. Stock Raum C.203",
+            date = dateFormat.parse("07.05.2024"),
+            severity = "middle",
+            status = "open",
+            description = "Laser im Labor ist kaputt, muss ausgetauscht werden",
+            picture = R.drawable.laser_task,
+            teamId = 2
         )
     )
 }
