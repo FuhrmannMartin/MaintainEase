@@ -36,8 +36,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.maintainease.NavigationHandling
 import com.example.maintainease.data.Maintenance
+import com.example.maintainease.data.dateFormat
 
 @Composable
 fun ListOfMaintenanceTask(
@@ -79,13 +81,17 @@ fun MaintenanceTask(
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
-            MaintenanceCardHeader(maintenance = maintenance)
+            val currentBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentDestination = currentBackStackEntry?.destination
+
+            if (currentDestination?.route?.startsWith("detail/") == true) {
+                MaintenanceCardHeader(maintenance = maintenance)
+            }
+
             MaintenanceDetails(maintenance = maintenance)
         }
     }
 }
-
-
 
 @Composable
 fun MaintenanceDetails(
@@ -115,7 +121,7 @@ fun MaintenanceDetails(
     ) {
         Column {
             Text(text = "Location: ${maintenance.location}")
-            Text(text = "Date: ${maintenance.date}")
+            Text(text = "Date: ${maintenance.date?.let { dateFormat.format(it) }}")
             Text(text = "Severity: ${maintenance.severity}")
             Text(text = "Status: ${maintenance.status}")
             Text(text = "Description: ${maintenance.description}")
