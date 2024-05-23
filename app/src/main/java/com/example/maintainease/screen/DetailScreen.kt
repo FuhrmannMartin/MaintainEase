@@ -1,8 +1,12 @@
 package com.example.maintainease.screen
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -13,13 +17,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.maintainease.data.InjectorUtils
-import com.example.maintainease.data.getCurrentUser
 import com.example.maintainease.viewModel.DetailScreenViewModel
 import com.example.maintainease.widgets.CustomDivider
 import com.example.maintainease.widgets.MaintenanceTask
@@ -45,7 +50,7 @@ fun DetailScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             SimpleTopAppBar(
-                title = maintenanceTask?.title ?: "Maintenance Task Details",
+                title = "",// maintenanceTask?.maintenance?.title ?: "Maintenance Task Details",
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back Icon")
@@ -59,19 +64,25 @@ fun DetailScreen(
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             maintenanceTask?.let { maintenanceTask ->
-                MaintenanceTask(maintenance = maintenanceTask, navController = navController)
+                MaintenanceTask(maintenanceWithAssignee = maintenanceTask, navController = navController)
             }
             CustomDivider()
-            if (assignee?.id == getCurrentUser()["staffId"]) {
-                Text(text = "Assigned to me!")
-            } else {
+            Box(modifier = Modifier.padding(start = 16.dp)) {
                 if (assignee?.id == null) {
-                    Text(text = "Not assigned yet!")
-                    Button(onClick = { detailScreenViewModel.viewModelScope.launch { detailScreenViewModel.assignToMe() } }) {
+                    Button(
+                        onClick = { detailScreenViewModel.viewModelScope.launch { detailScreenViewModel.assignToMe() } },
+                    ) {
                         Text(text = "Assign to me")
                     }
                 } else {
-                    Text(text = "Assigned to ${assignee?.name}!")
+                    Box(
+                        modifier = Modifier.align(Alignment.CenterStart)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Assigned to ${assignee?.name}!")
+                            Spacer(modifier = Modifier.width(16.dp)) // Add some space between the button and the text
+                        }
+                    }
                 }
             }
         }

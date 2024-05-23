@@ -2,7 +2,7 @@ package com.example.maintainease.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.maintainease.data.Maintenance
+import com.example.maintainease.data.MaintenanceWithAssignee
 import com.example.maintainease.data.Staff
 import com.example.maintainease.data.getCurrentUser
 import com.example.maintainease.repositories.MaintenanceRepository
@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class DetailScreenViewModel(private val repository: MaintenanceRepository, private val taskId: Int) : ViewModel() {
-    private val _maintenance = MutableStateFlow<Maintenance?>(null)
-    val maintenance: StateFlow<Maintenance?> = _maintenance
+    private val _maintenance = MutableStateFlow<MaintenanceWithAssignee?>(null)
+    val maintenance: StateFlow<MaintenanceWithAssignee?> = _maintenance
     private val _assignee = MutableStateFlow<Staff?>(null)
     val assignee: StateFlow<Staff?> = _assignee
 

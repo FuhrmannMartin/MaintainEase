@@ -21,6 +21,11 @@ class Maintenance(
     val teamId: Int
 )
 
+class MaintenanceWithAssignee(
+    val maintenance: Maintenance,
+    val assignee: Staff? = null
+)
+
 val locale = Locale("German", "Austria")
 val dateFormat = SimpleDateFormat("dd.MM.yyyy", locale)
 

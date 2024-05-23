@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -113,3 +116,14 @@ data class BottomNavigationItem(
     val icon: ImageVector
 )
 
+@Composable
+fun MyCheckbox(isChecked: Boolean, onCheckedChange: (Boolean) -> Unit, text: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Checkbox(
+            checked = isChecked,
+            onCheckedChange = onCheckedChange // No need for additional lambda here
+        )
+        Spacer(modifier = Modifier.width(2.dp)) // Adjust spacing between checkbox and text
+        Text(text = text)
+    }
+}
