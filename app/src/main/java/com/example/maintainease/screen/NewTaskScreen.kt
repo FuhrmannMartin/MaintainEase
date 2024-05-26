@@ -38,7 +38,15 @@ fun NewTaskScreen(
     val newTaskScreenViewModel: NewTaskScreenViewModel =
         viewModel(factory = InjectorUtils.provideNewTaskScreenViewModelFactory(context))
     val maintenances by newTaskScreenViewModel.maintenances.collectAsState()
-
+    var textTitle by remember {
+        mutableStateOf(TextFieldValue(""))
+    }
+    var textDescription by remember {
+        mutableStateOf(TextFieldValue(""))
+    }
+    var textLocation by remember {
+        mutableStateOf(TextFieldValue(""))
+    }
     Scaffold(
         topBar = {
             SimpleTopAppBar(title = "Add a new Maintenance Task")
@@ -49,14 +57,10 @@ fun NewTaskScreen(
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
 
-            var text by remember {
-                mutableStateOf(TextFieldValue(""))
-            }
-            var textLocation by remember {
-                mutableStateOf(TextFieldValue(""))
-            }
 
-            OutlinedTextField(modifier = Modifier.padding(all = 15.dp).height(200.dp).fillMaxWidth(), value = text,  onValueChange = { newText -> text = newText}, label = { Text(text = "Description: ")} )
+
+            OutlinedTextField(modifier = Modifier.padding(all = 15.dp).height(60.dp).fillMaxWidth(), value = textTitle,  onValueChange = { newText -> textTitle = newText}, label = { Text(text = "Title: ")} )
+            OutlinedTextField(modifier = Modifier.padding(all = 15.dp).height(200.dp).fillMaxWidth(), value = textDescription,  onValueChange = { newText -> textDescription = newText}, label = { Text(text = "Description: ")} )
 
             OutlinedTextField(modifier = Modifier.padding(all = 15.dp).height(100.dp).fillMaxWidth(), value = textLocation,  onValueChange = { newTextLocation -> textLocation = newTextLocation}, label = { Text(text = "Location: ")} )
         //   Text(text = "PLACEHOLDER")
