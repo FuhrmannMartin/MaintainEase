@@ -2,7 +2,7 @@ package com.example.maintainease.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.maintainease.data.Maintenance
+import com.example.maintainease.data.MaintenanceWithAssignee
 import com.example.maintainease.repositories.MaintenanceRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,13 +13,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class OverviewScreenViewModel(private val repository: MaintenanceRepository) : ViewModel() {
-    private val _maintenances = MutableStateFlow<List<Maintenance>>(emptyList())
-    private val currentUser = repository.currentUser
+    private val _maintenances = MutableStateFlow<List<MaintenanceWithAssignee>>(emptyList())
+    val currentUser = repository.currentUser
 
     init {
         viewModelScope.launch {
             if (currentUser["staffId"] != null) {
-                repository.getAllMaintenance()?.collectLatest { maintenanceList ->
+                repository.getAllMaintenanceWithAssignee()?.collectLatest { maintenanceList ->
                     _maintenances.value = maintenanceList
                 }
             }
@@ -27,23 +27,23 @@ class OverviewScreenViewModel(private val repository: MaintenanceRepository) : V
     }
 
 
-    val openMaintenances: StateFlow<List<Maintenance>> = _maintenances.map { maintenances ->
-        maintenances.filter { it.status == "open" }
+    val openMaintenances: StateFlow<List<MaintenanceWithAssignee>> = _maintenances.map { maintenances ->
+        maintenances.filter { it.maintenance.status == "open" }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
 
-    val inProgressMaintenances: StateFlow<List<Maintenance>> = _maintenances.map { maintenances ->
-        maintenances.filter { it.status == "in progress" }
+    val inProgressMaintenances: StateFlow<List<MaintenanceWithAssignee>> = _maintenances.map { maintenances ->
+        maintenances.filter { it.maintenance.status == "in progress" }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
 
-    val doneMaintenances: StateFlow<List<Maintenance>> = _maintenances.map { maintenances ->
-        maintenances.filter { it.status == "done" }
+    val doneMaintenances: StateFlow<List<MaintenanceWithAssignee>> = _maintenances.map { maintenances ->
+        maintenances.filter { it.maintenance.status == "done" }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
 
-    val cancelledMaintenances: StateFlow<List<Maintenance>> = _maintenances.map { maintenances ->
-        maintenances.filter { it.status == "cancelled" }
+    val cancelledMaintenances: StateFlow<List<MaintenanceWithAssignee>> = _maintenances.map { maintenances ->
+        maintenances.filter { it.maintenance.status == "cancelled" }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
 }

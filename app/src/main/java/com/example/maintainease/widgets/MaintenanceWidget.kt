@@ -38,23 +38,23 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.maintainease.NavigationHandling
-import com.example.maintainease.data.Maintenance
+import com.example.maintainease.data.MaintenanceWithAssignee
 import com.example.maintainease.data.dateFormat
 
 @Composable
 fun ListOfMaintenanceTask(
     modifier: Modifier,
-    maintenance: List<Maintenance>,
+    maintenanceWithAssignee: List<MaintenanceWithAssignee>,
     navController: NavController,
     viewModel: ViewModel
 ) {
-    Log.d("ListOfVisibleObjectGroups", "Displaying ${maintenance.size} movies")
+    Log.d("ListOfVisibleObjectGroups", "Displaying ${maintenanceWithAssignee.size} movies")
     Column{
         Spacer(modifier = Modifier.height(8.dp))
         LazyColumn(modifier = Modifier.padding(bottom = 1.dp, start = 6.dp)) {
             try {
-                items(maintenance) { maintenanceItem ->
-                    MaintenanceTask(maintenance = maintenanceItem, navController = navController)
+                items(maintenanceWithAssignee) { maintenanceItem ->
+                    MaintenanceTask(maintenanceWithAssignee = maintenanceItem, navController = navController)
                     Spacer(modifier = Modifier.padding(4.dp))
                 }
             } catch (e: Exception) {
@@ -66,7 +66,7 @@ fun ListOfMaintenanceTask(
 
 @Composable
 fun MaintenanceTask(
-    maintenance: Maintenance,
+    maintenanceWithAssignee: MaintenanceWithAssignee,
     navController: NavController,
     onItemClick: (Int) -> Unit = {}
 ) {
@@ -75,7 +75,7 @@ fun MaintenanceTask(
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 6.dp)
             .clickable {
-                navController.navigate(NavigationHandling.Detail.createRoute(maintenance.id))
+                navController.navigate(NavigationHandling.Detail.createRoute(maintenanceWithAssignee.maintenance.id))
             },
         shape = ShapeDefaults.Large,
         elevation = CardDefaults.cardElevation(10.dp)
@@ -85,17 +85,18 @@ fun MaintenanceTask(
             val currentDestination = currentBackStackEntry?.destination
 
             if (currentDestination?.route?.startsWith("detail/") == true) {
-                MaintenanceCardHeader(maintenance = maintenance)
+                MaintenanceCardHeader(maintenanceWithAssignee = maintenanceWithAssignee)
             }
 
-            MaintenanceDetails(maintenance = maintenance)
+            MaintenanceDetails(maintenanceWithAssignee = maintenanceWithAssignee)
         }
     }
 }
 
 @Composable
 fun MaintenanceDetails(
-    maintenance: Maintenance) {
+    maintenanceWithAssignee: MaintenanceWithAssignee
+) {
     var showDetails by remember {
         mutableStateOf(false)
     }
@@ -107,7 +108,7 @@ fun MaintenanceDetails(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = maintenance.title)
+        Text(text = maintenanceWithAssignee.maintenance.title)
         Icon(
             modifier = Modifier.clickable {
                 showDetails = !showDetails
@@ -120,24 +121,24 @@ fun MaintenanceDetails(
         visible = showDetails, enter = fadeIn(), exit = fadeOut()
     ) {
         Column {
-            Text(text = "Location: ${maintenance.location}")
-            Text(text = "Date: ${maintenance.date?.let { dateFormat.format(it) }}")
-            Text(text = "Severity: ${maintenance.severity}")
-            Text(text = "Status: ${maintenance.status}")
-            Text(text = "Description: ${maintenance.description}")
+            Text(text = "Location: ${maintenanceWithAssignee.maintenance.location}")
+            Text(text = "Date: ${maintenanceWithAssignee.maintenance.date?.let { dateFormat.format(it) }}")
+            Text(text = "Severity: ${maintenanceWithAssignee.maintenance.severity}")
+            Text(text = "Status: ${maintenanceWithAssignee.maintenance.status}")
+            Text(text = "Description: ${maintenanceWithAssignee.maintenance.description}")
         }
     }
 }
 
 @Composable
-fun MaintenanceCardHeader(maintenance: Maintenance) {
+fun MaintenanceCardHeader(maintenanceWithAssignee: MaintenanceWithAssignee) {
     Box(
         modifier = Modifier
             .height(150.dp)
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        maintenance.picture?.let { picture ->
+        maintenanceWithAssignee.maintenance.picture?.let { picture ->
             Image(
                 modifier = Modifier.fillMaxWidth(),
                 painter = painterResource(id = picture),
