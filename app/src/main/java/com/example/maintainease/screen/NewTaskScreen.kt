@@ -1,12 +1,18 @@
 package com.example.maintainease.screen
 
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -18,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
@@ -47,6 +54,11 @@ fun NewTaskScreen(
     var textLocation by remember {
         mutableStateOf(TextFieldValue(""))
     }
+    val scrollState = rememberScrollState()
+
+    var dropDownexpanded by remember { mutableStateOf(false) }
+    var selectedItem by remember { mutableStateOf("Select") }
+
     Scaffold(
         topBar = {
             SimpleTopAppBar(title = "Add a new Maintenance Task")
@@ -55,17 +67,56 @@ fun NewTaskScreen(
             SimpleBottomAppBar(navController = navController)
         },
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
+        Column(modifier = Modifier
+            .padding(innerPadding)
+            .verticalScroll(state = scrollState)) {
 
+            OutlinedTextField(modifier = Modifier
+                .padding(all = 15.dp)
+                .height(60.dp)
+                .fillMaxWidth(), value = textTitle,  onValueChange = { newText -> textTitle = newText}, label = { Text(text = "Title: ")} )
+            OutlinedTextField(modifier = Modifier
+                .padding(all = 15.dp)
+                .height(200.dp)
+                .fillMaxWidth(), value = textDescription,  onValueChange = { newText -> textDescription = newText}, label = { Text(text = "Description: ")} )
 
-
-            OutlinedTextField(modifier = Modifier.padding(all = 15.dp).height(60.dp).fillMaxWidth(), value = textTitle,  onValueChange = { newText -> textTitle = newText}, label = { Text(text = "Title: ")} )
-            OutlinedTextField(modifier = Modifier.padding(all = 15.dp).height(200.dp).fillMaxWidth(), value = textDescription,  onValueChange = { newText -> textDescription = newText}, label = { Text(text = "Description: ")} )
-
-            OutlinedTextField(modifier = Modifier.padding(all = 15.dp).height(100.dp).fillMaxWidth(), value = textLocation,  onValueChange = { newTextLocation -> textLocation = newTextLocation}, label = { Text(text = "Location: ")} )
+            OutlinedTextField(modifier = Modifier
+                .padding(all = 15.dp)
+                .height(100.dp)
+                .fillMaxWidth(), value = textLocation,  onValueChange = { newTextLocation -> textLocation = newTextLocation}, label = { Text(text = "Location: ")} )
         //   Text(text = "PLACEHOLDER")
+        Row(modifier = Modifier.padding(start = 15.dp)) {
+            Text("Severity: ", modifier = Modifier.padding(top=15.dp, start = 20.dp))
+            Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
+                Button(
+                    onClick = { dropDownexpanded = true },
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
+                    Text(selectedItem)
+                }
+                DropdownMenu(
+                    expanded = dropDownexpanded,
+                    onDismissRequest = { dropDownexpanded = false }) {
+                    DropdownMenuItem(text = { Text("Low") }, onClick = {
+                        selectedItem = "Low"
+                        dropDownexpanded = false
+                    })
+                    DropdownMenuItem(text = { Text("Middle") }, onClick = {
+                        selectedItem = "Middle"
+                        dropDownexpanded = false
+                    })
+                    DropdownMenuItem(text = { Text("High") }, onClick = {
+                        selectedItem = "High"
+                        dropDownexpanded = false
+                    })
+                }
 
-            Row(modifier = Modifier.fillMaxWidth().padding(30.dp)) {
+
+            }
+        }
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(30.dp)) {
                 OutlinedButton(onClick = { /*TODO*/ }) {
                     Text("Submit")
                 }
