@@ -12,9 +12,9 @@ import com.example.maintainease.screen.OverviewScreen
 
 
 sealed class NavigationHandling(val route: String) {
-    object OverviewScreen : NavigationHandling("overview")
-    object NewTaskScreen : NavigationHandling("newTask")
-    object Detail : NavigationHandling("detail/{id}") {
+    data object OverviewScreen : NavigationHandling("overview")
+    data object NewTaskScreen : NavigationHandling("newTask")
+    data object Detail : NavigationHandling("detail/{id}") {
         fun createRoute(id: Int) = "detail/$id"
     }
 }
