@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
     exportSchema = false
 )
 
-@TypeConverters(DateRoomConverter::class, Converters::class)
+@TypeConverters(Converters::class)
 abstract class MaintenanceDB : RoomDatabase() {
     abstract fun maintenanceDAO(): MaintenanceDAO
     abstract fun staffDAO(): StaffDAO
