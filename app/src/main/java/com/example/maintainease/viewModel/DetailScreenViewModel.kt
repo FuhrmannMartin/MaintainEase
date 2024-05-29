@@ -19,7 +19,7 @@ class DetailScreenViewModel(private val repository: MaintenanceRepository, priva
 
     init {
         viewModelScope.launch {
-            repository.getMaintenanceById(taskId).collectLatest { maintenance ->
+            repository.getMaintenanceWithAssigneeById(taskId).collectLatest { maintenance ->
                 _maintenance.value = maintenance
             }
         }
@@ -32,6 +32,17 @@ class DetailScreenViewModel(private val repository: MaintenanceRepository, priva
 
     suspend fun assignToMe() {
         getCurrentUser()["staffId"]?.let { repository.assignToMe(taskId, it) }
+    }
+
+    suspend fun addComment(comment: String) {
+        val task = maintenance.value?.maintenance
+
+        if (task != null) {
+            val c = task.comments.toMutableList()
+            c.add(0, comment)
+            task.comments = c
+        }
+        maintenance.value?.let { repository.addCommentToTask(it.maintenance) }
     }
 
 }

@@ -15,11 +15,11 @@ import kotlinx.coroutines.launch
 @Database(
     entities = [Maintenance::class, Team::class, Staff::class,
         TeamStaffRelation::class, StaffMaintenanceRelation::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 
-@TypeConverters(DateRoomConverter::class)
+@TypeConverters(DateRoomConverter::class, Converters::class)
 abstract class MaintenanceDB : RoomDatabase() {
     abstract fun maintenanceDAO(): MaintenanceDAO
     abstract fun staffDAO(): StaffDAO
