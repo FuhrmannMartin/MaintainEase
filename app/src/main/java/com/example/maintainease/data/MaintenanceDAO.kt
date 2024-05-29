@@ -15,7 +15,7 @@ interface MaintenanceDAO {
     suspend fun insertStaffMaintenanceRelation(taskId: Long)
 
     @Update
-    suspend fun updateMaintenance(maintenances: List<Maintenance>)
+    suspend fun updateMaintenance(maintenance: Maintenance)
 
     @Query("SELECT * FROM maintenance WHERE teamId = :teamId")
     fun getAllMaintenance(teamId: Int): Flow<List<Maintenance>>
