@@ -2,14 +2,12 @@ package com.example.maintainease.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
 import com.example.maintainease.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Entity(tableName = "maintenance")
-@TypeConverters(Converters::class)
 class Maintenance(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
@@ -21,7 +19,7 @@ class Maintenance(
     val description: String,
     val picture: Int?,
     val teamId: Int,
-    var comments: List<String>
+    var comments: List<String> = emptyList()
 )
 
 class MaintenanceWithAssignee(
@@ -53,8 +51,7 @@ fun getMaintenance(): List<Maintenance> {
             status = "open",
             description = "Das Gelände ist lose, gehen darauf ist sehr gefährlich",
             picture = R.drawable.treppenhaus_task,
-            teamId = 1,
-            comments = emptyList()
+            teamId = 1
         ),
         Maintenance(
             title = "Wand verschmutzt",
@@ -64,8 +61,7 @@ fun getMaintenance(): List<Maintenance> {
             status = "open",
             description = "Wand ist schmutzig, muss neu angestrichen werden.",
             picture = R.drawable.wand_task,
-            teamId = 1,
-            comments = emptyList()
+            teamId = 1
         ),
         Maintenance(
             title = "Toilette verstopft",
@@ -75,8 +71,7 @@ fun getMaintenance(): List<Maintenance> {
             status = "in progress",
             description = "Bitte entstopfen",
             picture = R.drawable.wc_task,
-            teamId = 1,
-            comments = emptyList()
+            teamId = 1
         ),
         Maintenance(
             title = "Laser kaputt",
@@ -86,8 +81,7 @@ fun getMaintenance(): List<Maintenance> {
             status = "done",
             description = "Laser im Labor ist kaputt, muss ausgetauscht werden",
             picture = R.drawable.laser_task,
-            teamId = 1,
-            comments = emptyList()
+            teamId = 1
         ),
         Maintenance(
             title = "Laser kaputt",
@@ -97,8 +91,7 @@ fun getMaintenance(): List<Maintenance> {
             status = "open",
             description = "Laser im Labor ist kaputt, muss ausgetauscht werden",
             picture = R.drawable.laser_task,
-            teamId = 2,
-            comments = emptyList()
+            teamId = 2
         )
     )
 
