@@ -1,6 +1,5 @@
 package com.example.maintainease.screen
 
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,13 +12,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,12 +46,7 @@ fun NewTaskScreen(
 {
     var currentDate = Date()
 
-
-    // Create a SimpleDateFormat instance with the desired format
     val dateFormat: SimpleDateFormat = SimpleDateFormat("dd.MM.yyyy")
-
-
-    // Format the current date
     val formattedDate: String = dateFormat.format(currentDate)
 
     val context = LocalContext.current
@@ -63,6 +56,13 @@ fun NewTaskScreen(
     var textTitle by remember {
         mutableStateOf(TextFieldValue(""))
     }
+    var isError by remember { mutableStateOf(false) }
+    var isErrorTitle by remember { mutableStateOf(false) }
+    var isErrorDescription by remember { mutableStateOf(false) }
+    var isErrorLocation by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+    val errorMessageText = "Cannot save. Please fill out every Field"
+
     var textDescription by remember {
         mutableStateOf(TextFieldValue(""))
     }
@@ -72,7 +72,7 @@ fun NewTaskScreen(
     val scrollState = rememberScrollState()
 
     var dropDownexpanded by remember { mutableStateOf(false) }
-    var selectedItem by remember { mutableStateOf("Low") }
+    var selectedItem by remember { mutableStateOf("low") }
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
@@ -90,16 +90,29 @@ fun NewTaskScreen(
             OutlinedTextField(modifier = Modifier
                 .padding(all = 15.dp)
                 .height(60.dp)
-                .fillMaxWidth(), value = textTitle,  onValueChange = { newText -> textTitle = newText}, label = { Text(text = "Title: ")} )
+                .fillMaxWidth(), value = textTitle,  onValueChange = { newText -> textTitle = newText}, label = { Text(text = "Title: ");
+                isErrorTitle = textTitle.text.isEmpty()
+                errorMessage = if (isErrorTitle) errorMessageText else ""} )
+
+            isErrorFun(isError = isErrorTitle, errorMessage =errorMessage )
+
             OutlinedTextField(modifier = Modifier
                 .padding(all = 15.dp)
                 .height(200.dp)
-                .fillMaxWidth(), value = textDescription,  onValueChange = { newText -> textDescription = newText}, label = { Text(text = "Description: ")} )
+                .fillMaxWidth(), value = textDescription,  onValueChange = { newText -> textDescription = newText}, label = { Text(text = "Description: ")
+                isErrorDescription = textDescription.text.isEmpty()
+                errorMessage = if (isErrorDescription) errorMessageText else ""} )
+
+            isErrorFun(isError = isErrorDescription, errorMessage =errorMessage )
 
             OutlinedTextField(modifier = Modifier
                 .padding(all = 15.dp)
                 .height(100.dp)
-                .fillMaxWidth(), value = textLocation,  onValueChange = { newTextLocation -> textLocation = newTextLocation}, label = { Text(text = "Location: ")} )
+                .fillMaxWidth(), value = textLocation,  onValueChange = { newTextLocation -> textLocation = newTextLocation}, label = { Text(text = "Location: ")
+                isErrorLocation = textLocation.text.isEmpty()
+                errorMessage = if (isErrorLocation) errorMessageText else ""} )
+
+            isErrorFun(isError = isErrorLocation, errorMessage =errorMessage )
         //   Text(text = "PLACEHOLDER")
         Row(modifier = Modifier.padding(start = 15.dp)) {
             Text("Severity (Standard: Low): ", modifier = Modifier.padding(top=15.dp, start = 20.dp))
@@ -114,15 +127,15 @@ fun NewTaskScreen(
                     expanded = dropDownexpanded,
                     onDismissRequest = { dropDownexpanded = false }) {
                     DropdownMenuItem(text = { Text("Low") }, onClick = {
-                        selectedItem = "Low"
+                        selectedItem = "low"
                         dropDownexpanded = false
                     })
                     DropdownMenuItem(text = { Text("Middle") }, onClick = {
-                        selectedItem = "Middle"
+                        selectedItem = "middle"
                         dropDownexpanded = false
                     })
                     DropdownMenuItem(text = { Text("High") }, onClick = {
-                        selectedItem = "High"
+                        selectedItem = "high"
                         dropDownexpanded = false
                     })
                 }
@@ -135,9 +148,24 @@ fun NewTaskScreen(
                 .fillMaxWidth()
                 .padding(30.dp)) {
                 OutlinedButton(onClick = {
+                    if(isErrorTitle || isErrorDescription || isErrorLocation){
+                        isError = true
+                        errorMessage = errorMessageText
+                    }else{
                     coroutineScope.launch {
-                        val mainten = Maintenance(title = textTitle.text, description = textDescription.text, location = textLocation.text, severity = selectedItem, status = "open", teamId = 2, picture = null, date = dateFormat.parse(formattedDate))
-                        viewModel.addMaintenance(maintenance = mainten )
+                        val mainten = Maintenance(
+                            title = textTitle.text,
+                            description = textDescription.text,
+                            location = textLocation.text,
+                            severity = selectedItem,
+                            status = "open",
+                            teamId = 0,
+                            picture = null,
+                            date = dateFormat.parse(formattedDate)
+                        )
+                        viewModel.addMaintenance(maintenance = mainten)
+                        navController.popBackStack()
+                    }
                     } }) {
                     Text("Submit")
                 }
@@ -146,21 +174,21 @@ fun NewTaskScreen(
                 OutlinedButton(onClick = { navController.popBackStack() }) {
                     Text("Cancel")
                 }
+                isErrorFun(isError = isError, errorMessage = errorMessage)
             }
         }
     }
 }
 
-fun newMaintenancetoDB(maintenance: Maintenance){
 
-}
-
-
-
-fun saveTasktoDb( onAddClick: (Maintenance) -> Unit = {} ){
-    {
-
+@Composable
+fun isErrorFun(isError: Boolean, errorMessage: String) {
+    if (isError) {
+        Text(
+            text = errorMessage,
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp)
+        )
     }
 }
-
-
