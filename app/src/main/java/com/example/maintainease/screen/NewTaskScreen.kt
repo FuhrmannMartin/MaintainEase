@@ -38,12 +38,24 @@ import com.example.maintainease.viewModel.NewTaskScreenViewModel
 import com.example.maintainease.widgets.SimpleBottomAppBar
 import com.example.maintainease.widgets.SimpleTopAppBar
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @Composable
 fun NewTaskScreen(
     navController: NavController
 )
 {
+    var currentDate = Date()
+
+
+    // Create a SimpleDateFormat instance with the desired format
+    val dateFormat: SimpleDateFormat = SimpleDateFormat("dd.MM.yyyy")
+
+
+    // Format the current date
+    val formattedDate: String = dateFormat.format(currentDate)
+
     val context = LocalContext.current
     //val newTaskScreenViewModel: NewTaskScreenViewModel =
         val viewModel: NewTaskScreenViewModel = viewModel(factory = InjectorUtils.provideNewTaskScreenViewModelFactory(context))
@@ -60,7 +72,7 @@ fun NewTaskScreen(
     val scrollState = rememberScrollState()
 
     var dropDownexpanded by remember { mutableStateOf(false) }
-    var selectedItem by remember { mutableStateOf("Select") }
+    var selectedItem by remember { mutableStateOf("Low") }
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
@@ -90,7 +102,7 @@ fun NewTaskScreen(
                 .fillMaxWidth(), value = textLocation,  onValueChange = { newTextLocation -> textLocation = newTextLocation}, label = { Text(text = "Location: ")} )
         //   Text(text = "PLACEHOLDER")
         Row(modifier = Modifier.padding(start = 15.dp)) {
-            Text("Severity: ", modifier = Modifier.padding(top=15.dp, start = 20.dp))
+            Text("Severity (Standard: Low): ", modifier = Modifier.padding(top=15.dp, start = 20.dp))
             Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
                 Button(
                     onClick = { dropDownexpanded = true },
@@ -124,7 +136,7 @@ fun NewTaskScreen(
                 .padding(30.dp)) {
                 OutlinedButton(onClick = {
                     coroutineScope.launch {
-                        val mainten = Maintenance(title = textTitle.text, description = textDescription.text, location = textLocation.text, severity = selectedItem, status = "open", teamId = 2, picture = null, date = null)
+                        val mainten = Maintenance(title = textTitle.text, description = textDescription.text, location = textLocation.text, severity = selectedItem, status = "open", teamId = 2, picture = null, date = dateFormat.parse(formattedDate))
                         viewModel.addMaintenance(maintenance = mainten )
                     } }) {
                     Text("Submit")
@@ -137,6 +149,10 @@ fun NewTaskScreen(
             }
         }
     }
+}
+
+fun newMaintenancetoDB(maintenance: Maintenance){
+
 }
 
 
