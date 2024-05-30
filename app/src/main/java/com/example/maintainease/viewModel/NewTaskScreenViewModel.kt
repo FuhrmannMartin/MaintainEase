@@ -20,4 +20,10 @@ class NewTaskScreenViewModel(private val repository: MaintenanceRepository) : Vi
             }
         }
     }
+
+    suspend fun addMaintenance(maintenance: Maintenance){
+        viewModelScope.launch {
+            repository.addNewMaintenanceTask(maintenance)
+        }
+    }
 }
