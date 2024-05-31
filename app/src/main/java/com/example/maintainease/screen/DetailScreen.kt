@@ -1,5 +1,6 @@
 package com.example.maintainease.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -29,11 +31,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.maintainease.data.InjectorUtils
 import com.example.maintainease.viewModel.DetailScreenViewModel
 import com.example.maintainease.widgets.CustomDivider
@@ -59,12 +63,11 @@ fun DetailScreen(
     var dropDownexpanded by remember { mutableStateOf(false) }
     var selectedStatusChange by remember { mutableStateOf("Change Status") }
 
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             SimpleTopAppBar(
-                title = "",// maintenanceTask?.maintenance?.title ?: "Maintenance Task Details",
+                title = maintenanceTask?.maintenance?.title ?: "Maintenance Task Details",
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back Icon")
@@ -76,63 +79,96 @@ fun DetailScreen(
             SimpleBottomAppBar(navController = navController)
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-            maintenanceTask?.let { maintenanceTask ->
-                MaintenanceTask(maintenanceWithAssignee = maintenanceTask,
-                    navController = navController,
-                    onItemClick = {})
+        LazyColumn(modifier = Modifier.padding(innerPadding)) {
+            item {
+                maintenanceTask?.let { maintenanceTask ->
+                    MaintenanceTask(maintenanceWithAssignee = maintenanceTask,
+                        navController = navController,
+                        onItemClick = {})
+                }
             }
-            CustomDivider()
-            Box(modifier = Modifier.padding(start = 16.dp)) {
-                if (assignee?.id == null) {
-                    Button(
-                        onClick = { detailScreenViewModel.viewModelScope.launch { detailScreenViewModel.assignToMe() } },
-                    ) {
-                        Text(text = "Assign to me")
-                    }
-                } else {
-                    Box(
-                        modifier = Modifier.align(Alignment.CenterStart)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(text = "Assigned to ${assignee?.name}!")
-                            Spacer(modifier = Modifier.width(16.dp)) // Add some space between the button and the text
+            item {
+                CustomDivider()
+            }
+            item {
+                Box(modifier = Modifier.padding(start = 16.dp)) {
+                    if (assignee?.id == null) {
+                        Button(
+                            onClick = { detailScreenViewModel.viewModelScope.launch { detailScreenViewModel.assignToMe() } },
+                        ) {
+                            Text(text = "Assign to me")
+                        }
+                    } else {
+                        Box(
+                            modifier = Modifier.align(Alignment.CenterStart)
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(text = "Assigned to ${assignee?.name}!")
+                                Spacer(modifier = Modifier.width(16.dp)) // Add some space between the button and the text
+                            }
                         }
                     }
                 }
             }
-            Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
-                if (assignee?.id != null) {
-                    Button(
-                        onClick = { dropDownexpanded = true },
-                        modifier = Modifier.align(Alignment.Center)
-                    ) {
-                        Text(selectedStatusChange)
+
+            item {
+                Row {
+                    Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
+                        if (assignee?.id != null) {
+                            Button(
+                                onClick = { dropDownexpanded = true },
+                                modifier = Modifier.align(Alignment.Center)
+                            ) {
+                                Text(selectedStatusChange)
+                            }
+                            DropdownMenu(
+                                expanded = dropDownexpanded,
+                                onDismissRequest = { dropDownexpanded = false }) {
+                                DropdownMenuItem(text = { Text("open") }, onClick = {
+                                    selectedStatusChange = "open"
+                                    dropDownexpanded = false
+                                })
+                                DropdownMenuItem(text = { Text("in Progress") }, onClick = {
+                                    selectedStatusChange = "in progress"
+                                    dropDownexpanded = false
+                                })
+                                DropdownMenuItem(text = { Text("Done") }, onClick = {
+                                    selectedStatusChange = "done"
+                                    dropDownexpanded = false
+                                })
+                            }
+                        }
                     }
-                    DropdownMenu(
-                        expanded = dropDownexpanded,
-                        onDismissRequest = { dropDownexpanded = false }) {
-                        DropdownMenuItem(text = { Text("open") }, onClick = {
-                            selectedStatusChange = "open"
-                            dropDownexpanded = false
-                        })
-                        DropdownMenuItem(text = { Text("in Progress") }, onClick = {
-                            selectedStatusChange = "in progress"
-                            dropDownexpanded = false
-                        })
-                        DropdownMenuItem(text = { Text("Done") }, onClick = {
-                            selectedStatusChange = "done"
-                            dropDownexpanded = false
-                        })
+                    var statusUpdateSuccess by remember { mutableStateOf(false) }
+
+                    if (selectedStatusChange != "Change Status") {
+                        Button(onClick = {
+                            detailScreenViewModel.viewModelScope.launch {
+                                try {
+                                    detailScreenViewModel.updateStatus(selectedStatusChange)
+                                    statusUpdateSuccess = true // Update success status
+                                } catch (e: Exception) {
+                                    // Handle any exceptions if necessary
+                                    statusUpdateSuccess = false // Update failure status
+                                }
+                            }
+                        }) {
+                            Text("Confirm")
+                        }
+                        if (statusUpdateSuccess && selectedStatusChange == maintenanceTask?.maintenance?.status) {
+                            Text("Success Status Update!")
+                        }
                     }
                 }
             }
-
-
-
-
+            item {
                 CustomDivider()
+            }
+
+            item {
                 Text(text = "Comments:", modifier = Modifier.padding(start = 16.dp))
+            }
+            item {
                 Column(modifier = Modifier.padding(16.dp)) {
                     val comments = maintenanceTask?.maintenance?.comments
 
@@ -154,6 +190,8 @@ fun DetailScreen(
                         }
                     }
                 }
+            }
+            item {
                 Column(modifier = Modifier.padding(16.dp)) {
                     var comment by remember { mutableStateOf("") }
 
@@ -174,19 +212,23 @@ fun DetailScreen(
                     ) {
                         Text(text = "Add new comment!")
                     }
-                    if(selectedStatusChange != "Change Status") {
-                        Button(onClick = { detailScreenViewModel.viewModelScope.launch {
-                            detailScreenViewModel.updateStatus(selectedStatusChange)
 
-                        } }) {
-                            Text("Update Status")
-                        }
-                        if(selectedStatusChange == maintenanceTask?.maintenance?.status){
-                            Text("Changed status successfully")
+                    maintenanceTask?.let { task ->
+                        Button(
+                            onClick = {
+                                detailScreenViewModel.viewModelScope.launch {
+                                    detailScreenViewModel.deleteTheTask(
+                                        task.maintenance,
+                                        navController
+                                    )
+                                }
+                            }
+                        ) {
+                            Text(color = Color.Red, text = "Delete Task")
                         }
                     }
                 }
             }
         }
     }
-
+}

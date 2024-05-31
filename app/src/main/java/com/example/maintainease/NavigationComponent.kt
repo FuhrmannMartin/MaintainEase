@@ -31,10 +31,16 @@ fun AppNavigation(navController: NavHostController) {
         composable(NavigationHandling.Detail.route) { backStackEntry ->
             val taskId = backStackEntry.arguments?.getString("id")?.toIntOrNull()
             Log.d("Navigation", "Navigating to DetailScreen with taskId: $taskId")
-            taskId?.let {
+            if (taskId != null) {
                 DetailScreen(taskId, navController)
-            } ?: run {
-                Text(text = "ID not found")
+            } else {
+                // If the ID is not found, navigate back to the overview screen
+                Text("ID not found")
+                navController.navigate(NavigationHandling.OverviewScreen.route) {
+                    popUpTo(NavigationHandling.OverviewScreen.route) {
+                        inclusive = true
+                    }
+                }
             }
         }
     }

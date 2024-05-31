@@ -1,8 +1,9 @@
-package com.example.maintainease.data
+package com.example.maintainease.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.example.maintainease.data.entities.Staff
 
 @Dao
 interface StaffDAO {

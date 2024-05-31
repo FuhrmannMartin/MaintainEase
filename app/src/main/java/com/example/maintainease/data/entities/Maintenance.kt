@@ -1,4 +1,4 @@
-package com.example.maintainease.data
+package com.example.maintainease.data.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -51,7 +51,7 @@ fun getMaintenance(): List<Maintenance> {
             status = "open",
             description = "Das Gelände ist lose, gehen darauf ist sehr gefährlich",
             picture = R.drawable.treppenhaus_task,
-            teamId = 1
+            teamId = 1,
         ),
         Maintenance(
             title = "Wand verschmutzt",
@@ -61,7 +61,7 @@ fun getMaintenance(): List<Maintenance> {
             status = "open",
             description = "Wand ist schmutzig, muss neu angestrichen werden.",
             picture = R.drawable.wand_task,
-            teamId = 1
+            teamId = 1,
         ),
         Maintenance(
             title = "Toilette verstopft",
@@ -71,7 +71,7 @@ fun getMaintenance(): List<Maintenance> {
             status = "in progress",
             description = "Bitte entstopfen",
             picture = R.drawable.wc_task,
-            teamId = 1
+            teamId = 1,
         ),
         Maintenance(
             title = "Test",
@@ -81,7 +81,7 @@ fun getMaintenance(): List<Maintenance> {
             status = "in progress",
             description = "Bitte entstopfen",
             picture = R.drawable.laser_task,
-            teamId = 1
+            teamId = 1,
         ),
         Maintenance(
             title = "Laser kaputt",
@@ -91,7 +91,7 @@ fun getMaintenance(): List<Maintenance> {
             status = "done",
             description = "Laser im Labor ist kaputt, muss ausgetauscht werden",
             picture = R.drawable.laser_task,
-            teamId = 1
+            teamId = 1,
         )
     )
 

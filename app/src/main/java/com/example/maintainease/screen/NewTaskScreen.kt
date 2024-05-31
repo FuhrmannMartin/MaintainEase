@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.maintainease.data.InjectorUtils
-import com.example.maintainease.data.Maintenance
+import com.example.maintainease.data.entities.Maintenance
 import com.example.maintainease.viewModel.NewTaskScreenViewModel
 import com.example.maintainease.widgets.SimpleBottomAppBar
 import com.example.maintainease.widgets.SimpleTopAppBar
