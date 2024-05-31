@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -49,16 +47,16 @@ fun ListOfMaintenanceTask(
     viewModel: ViewModel
 ) {
     Log.d("ListOfVisibleObjectGroups", "Displaying ${maintenanceWithAssignee.size} movies")
-    Column{
+    Column {
         Spacer(modifier = Modifier.height(8.dp))
-        LazyColumn(modifier = Modifier.padding(bottom = 1.dp, start = 6.dp)) {
-            try {
-                items(maintenanceWithAssignee) { maintenanceItem ->
-                    MaintenanceTask(maintenanceWithAssignee = maintenanceItem, navController = navController)
-                    Spacer(modifier = Modifier.padding(4.dp))
-                }
-            } catch (e: Exception) {
-                Log.e("ListOfVisibleObjectGroups", "Error displaying maintenance Task: ${e.message}")
+        Column(modifier = Modifier.padding(bottom = 1.dp, start = 6.dp)) {
+            for (maintenanceItem in maintenanceWithAssignee) {
+                MaintenanceTask(maintenanceWithAssignee = maintenanceItem,
+                        navController = navController,
+                        onItemClick = { id ->
+                            navController.navigate(NavigationHandling.Detail.createRoute(id))
+                        })
+                Spacer(modifier = Modifier.padding(4.dp))
             }
         }
     }
@@ -75,7 +73,8 @@ fun MaintenanceTask(
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 6.dp)
             .clickable {
-                navController.navigate(NavigationHandling.Detail.createRoute(maintenanceWithAssignee.maintenance.id))
+                //navController.navigate(NavigationHandling.Detail.createRoute(maintenanceWithAssignee.maintenance.id))
+                onItemClick(maintenanceWithAssignee.maintenance.id)
             },
         shape = ShapeDefaults.Large,
         elevation = CardDefaults.cardElevation(10.dp)
@@ -122,7 +121,15 @@ fun MaintenanceDetails(
     ) {
         Column {
             Text(text = "Location: ${maintenanceWithAssignee.maintenance.location}")
-            Text(text = "Date: ${maintenanceWithAssignee.maintenance.date?.let { dateFormat.format(it) }}")
+            Text(
+                text = "Date: ${
+                    maintenanceWithAssignee.maintenance.date?.let {
+                        dateFormat.format(
+                            it
+                        )
+                    }
+                }"
+            )
             Text(text = "Severity: ${maintenanceWithAssignee.maintenance.severity}")
             Text(text = "Status: ${maintenanceWithAssignee.maintenance.status}")
             Text(text = "Description: ${maintenanceWithAssignee.maintenance.description}")

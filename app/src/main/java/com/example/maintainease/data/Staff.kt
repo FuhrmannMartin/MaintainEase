@@ -25,6 +25,6 @@ fun getStaff(): List<Staff> {
 }
 
 fun getCurrentUser(): Map<String, Int> {
-    val currentUser = mapOf("staffId" to 3, "teamId" to 1)
+    val currentUser = mapOf("staffId" to 1, "teamId" to 1)
     return currentUser
 }

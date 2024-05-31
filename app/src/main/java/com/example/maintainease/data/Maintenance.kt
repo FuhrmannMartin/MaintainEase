@@ -18,7 +18,8 @@ class Maintenance(
     val status: String,
     val description: String,
     val picture: Int?,
-    val teamId: Int
+    val teamId: Int,
+    var comments: List<String> = emptyList()
 )
 
 class MaintenanceWithAssignee(
@@ -39,7 +40,8 @@ fun getMaintenance(): List<Maintenance> {
             status = "open",
             description = "Die Lampe muss ausgetauscht werden E27",
             picture = R.drawable.lampe_task,
-            teamId = 1
+            teamId = 1,
+            comments = emptyList()
         ),
         Maintenance(
             title = "Gelände lose",
@@ -72,6 +74,16 @@ fun getMaintenance(): List<Maintenance> {
             teamId = 1
         ),
         Maintenance(
+            title = "Test",
+            location = "4. Stock Raum C.02",
+            date = dateFormat.parse("14.05.2025"),
+            severity = "low",
+            status = "in progress",
+            description = "Bitte entstopfen",
+            picture = R.drawable.laser_task,
+            teamId = 1
+        ),
+        Maintenance(
             title = "Laser kaputt",
             location = "5. Stock Raum D.104",
             date = dateFormat.parse("10.05.2024"),
@@ -80,16 +92,7 @@ fun getMaintenance(): List<Maintenance> {
             description = "Laser im Labor ist kaputt, muss ausgetauscht werden",
             picture = R.drawable.laser_task,
             teamId = 1
-        ),
-        Maintenance(
-            title = "Laser kaputt",
-            location = "3. Stock Raum C.203",
-            date = dateFormat.parse("07.05.2024"),
-            severity = "middle",
-            status = "open",
-            description = "Laser im Labor ist kaputt, muss ausgetauscht werden",
-            picture = R.drawable.laser_task,
-            teamId = 2
         )
     )
+
 }
