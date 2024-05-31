@@ -128,7 +128,9 @@ fun DetailScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
                 Button(
-                    onClick = { detailScreenViewModel.viewModelScope.launch { detailScreenViewModel.addComment(comment) } },
+                    onClick = { detailScreenViewModel.viewModelScope.launch { detailScreenViewModel.addComment(comment) }
+                        comment = ""
+                              },
                 ) {
                     Text(text = "Add new comment!")
                 }
