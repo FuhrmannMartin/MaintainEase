@@ -128,9 +128,6 @@ fun DetailScreen(
                 }
             }
 
-
-
-
                 CustomDivider()
                 Text(text = "Comments:", modifier = Modifier.padding(start = 16.dp))
                 Column(modifier = Modifier.padding(16.dp)) {

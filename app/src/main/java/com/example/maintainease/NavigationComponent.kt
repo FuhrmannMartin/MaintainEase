@@ -7,11 +7,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.maintainease.screen.DetailScreen
+import com.example.maintainease.screen.LoginScreen
 import com.example.maintainease.screen.NewTaskScreen
 import com.example.maintainease.screen.OverviewScreen
 
 
 sealed class NavigationHandling(val route: String) {
+
+    data object LoginScreen : NavigationHandling("loginscreen")
     data object OverviewScreen : NavigationHandling("overview")
     data object NewTaskScreen : NavigationHandling("newTask")
     data object Detail : NavigationHandling("detail/{id}") {
@@ -21,7 +24,12 @@ sealed class NavigationHandling(val route: String) {
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
-    NavHost(navController, startDestination = NavigationHandling.OverviewScreen.route) {
+    NavHost(navController, startDestination = NavigationHandling.LoginScreen.route) {
+
+        composable(NavigationHandling.LoginScreen.route){
+            LoginScreen(navController = navController)
+        }
+
         composable(NavigationHandling.OverviewScreen.route) {
             OverviewScreen(navController)
         }

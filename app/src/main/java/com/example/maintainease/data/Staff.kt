@@ -24,7 +24,14 @@ fun getStaff(): List<Staff> {
     )
 }
 
+object globalCurrentUser {
+    lateinit var globalCurrentUserVariable: Map<String,Int>
+}
+
 fun getCurrentUser(): Map<String, Int> {
-    val currentUser = mapOf("staffId" to 1, "teamId" to 1)
-    return currentUser
+        return globalCurrentUser.globalCurrentUserVariable
+}
+
+fun setCurrentUser(staffID: Int, teamID: Int){
+    globalCurrentUser.globalCurrentUserVariable = mapOf("staffId" to staffID, "teamId" to teamID)
 }
