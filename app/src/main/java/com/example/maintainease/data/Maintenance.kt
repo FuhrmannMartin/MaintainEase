@@ -18,7 +18,8 @@ class Maintenance(
     val status: String,
     val description: String,
     val picture: Int?,
-    val teamId: Int
+    val teamId: Int,
+    var comments: List<String> = emptyList()
 )
 
 class MaintenanceWithAssignee(
@@ -39,7 +40,8 @@ fun getMaintenance(): List<Maintenance> {
             status = "open",
             description = "Die Lampe muss ausgetauscht werden E27",
             picture = R.drawable.lampe_task,
-            teamId = 1
+            teamId = 1,
+            comments = emptyList()
         ),
         Maintenance(
             title = "Gelände lose",
@@ -92,4 +94,5 @@ fun getMaintenance(): List<Maintenance> {
             teamId = 1
         )
     )
+
 }

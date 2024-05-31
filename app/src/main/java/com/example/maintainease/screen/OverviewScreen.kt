@@ -1,9 +1,13 @@
 package com.example.maintainease.screen
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -80,52 +84,46 @@ fun OverviewScreen(navController: NavController) {
             SimpleBottomAppBar(navController = navController)
         },
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-            Text(
-                text = "Maintenance Tasks",
-                modifier = Modifier.padding(16.dp),
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Row {
-                MyCheckbox(
-                    isChecked = checkedState == CheckedState.MyTasks,
-                    onCheckedChange = {
-                        checkedState = if (it) CheckedState.MyTasks else CheckedState.None
-                    },
-                    text = "My Tasks"
-                )
-                MyCheckbox(
-                    isChecked = checkedState == CheckedState.UnassignedTasks,
-                    onCheckedChange = {
-                        checkedState = if (it) CheckedState.UnassignedTasks else CheckedState.None
-                    },
-                    text = "Unassigned"
+        LazyColumn(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
+            item {
+                Text(
+                    text = "Maintenance Tasks",
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.headlineSmall
                 )
             }
-            MaintenanceBox(
-                name =  "Open",
-                items = filteredOpenMaintenances,
-                navController =  navController,
-                viewModel = overviewScreenViewModel
-            )
-            MaintenanceBox(
-                name =  "In Progress",
-                items = filteredInProgressMaintenances,
-                navController =  navController,
-                viewModel = overviewScreenViewModel
-            )
-            MaintenanceBox(
-                name =  "Done",
-                items = filteredDoneMaintenances,
-                navController =  navController,
-                viewModel = overviewScreenViewModel
-            )
-            MaintenanceBox(
-                name =  "Cancelled",
-                items = filteredCancelledMaintenances,
-                navController =  navController,
-                viewModel = overviewScreenViewModel
-            )
+            item {
+                Row(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    MyCheckbox(
+                        isChecked = checkedState == CheckedState.MyTasks,
+                        onCheckedChange = {
+                            checkedState = if (it) CheckedState.MyTasks else CheckedState.None
+                        },
+                        text = "My Tasks"
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    MyCheckbox(
+                        isChecked = checkedState == CheckedState.UnassignedTasks,
+                        onCheckedChange = {
+                            checkedState = if (it) CheckedState.UnassignedTasks else CheckedState.None
+                        },
+                        text = "Unassigned"
+                    )
+                }
+            }
+            items(listOf(
+                "Open" to filteredOpenMaintenances,
+                "In Progress" to filteredInProgressMaintenances,
+                "Done" to filteredDoneMaintenances,
+                "Cancelled" to filteredCancelledMaintenances
+            )) { (name, items) ->
+                MaintenanceBox(
+                    name = name,
+                    items = items,
+                    navController = navController,
+                    viewModel = overviewScreenViewModel
+                )
+            }
         }
     }
 }

@@ -61,6 +61,7 @@ dependencies {
 
     implementation("androidx.room:room-runtime:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    implementation("com.google.code.gson:gson:2.8.8")
 
     ksp("androidx.room:room-compiler:$roomVersion")
 

@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -51,22 +49,14 @@ fun ListOfMaintenanceTask(
     Log.d("ListOfVisibleObjectGroups", "Displaying ${maintenanceWithAssignee.size} movies")
     Column {
         Spacer(modifier = Modifier.height(8.dp))
-        LazyColumn(modifier = Modifier.padding(bottom = 1.dp, start = 6.dp)) {
-            try {
-                items(maintenanceWithAssignee) { maintenanceItem ->
-                    MaintenanceTask(
-                        maintenanceWithAssignee = maintenanceItem,
+        Column(modifier = Modifier.padding(bottom = 1.dp, start = 6.dp)) {
+            for (maintenanceItem in maintenanceWithAssignee) {
+                MaintenanceTask(maintenanceWithAssignee = maintenanceItem,
                         navController = navController,
                         onItemClick = { id ->
                             navController.navigate(NavigationHandling.Detail.createRoute(id))
                         })
-                    Spacer(modifier = Modifier.padding(4.dp))
-                }
-            } catch (e: Exception) {
-                Log.e(
-                    "ListOfVisibleObjectGroups",
-                    "Error displaying maintenance Task: ${e.message}"
-                )
+                Spacer(modifier = Modifier.padding(4.dp))
             }
         }
     }
