@@ -64,7 +64,9 @@ fun DetailScreen(
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             maintenanceTask?.let { maintenanceTask ->
-                MaintenanceTask(maintenanceWithAssignee = maintenanceTask, navController = navController)
+                MaintenanceTask(maintenanceWithAssignee = maintenanceTask,
+                    navController = navController,
+                    onItemClick = {})
             }
             CustomDivider()
             Box(modifier = Modifier.padding(start = 16.dp)) {

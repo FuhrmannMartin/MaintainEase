@@ -49,16 +49,24 @@ fun ListOfMaintenanceTask(
     viewModel: ViewModel
 ) {
     Log.d("ListOfVisibleObjectGroups", "Displaying ${maintenanceWithAssignee.size} movies")
-    Column{
+    Column {
         Spacer(modifier = Modifier.height(8.dp))
         LazyColumn(modifier = Modifier.padding(bottom = 1.dp, start = 6.dp)) {
             try {
                 items(maintenanceWithAssignee) { maintenanceItem ->
-                    MaintenanceTask(maintenanceWithAssignee = maintenanceItem, navController = navController)
+                    MaintenanceTask(
+                        maintenanceWithAssignee = maintenanceItem,
+                        navController = navController,
+                        onItemClick = { id ->
+                            navController.navigate(NavigationHandling.Detail.createRoute(id))
+                        })
                     Spacer(modifier = Modifier.padding(4.dp))
                 }
             } catch (e: Exception) {
-                Log.e("ListOfVisibleObjectGroups", "Error displaying maintenance Task: ${e.message}")
+                Log.e(
+                    "ListOfVisibleObjectGroups",
+                    "Error displaying maintenance Task: ${e.message}"
+                )
             }
         }
     }
@@ -75,7 +83,8 @@ fun MaintenanceTask(
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 6.dp)
             .clickable {
-                navController.navigate(NavigationHandling.Detail.createRoute(maintenanceWithAssignee.maintenance.id))
+                //navController.navigate(NavigationHandling.Detail.createRoute(maintenanceWithAssignee.maintenance.id))
+                onItemClick(maintenanceWithAssignee.maintenance.id)
             },
         shape = ShapeDefaults.Large,
         elevation = CardDefaults.cardElevation(10.dp)
@@ -122,7 +131,15 @@ fun MaintenanceDetails(
     ) {
         Column {
             Text(text = "Location: ${maintenanceWithAssignee.maintenance.location}")
-            Text(text = "Date: ${maintenanceWithAssignee.maintenance.date?.let { dateFormat.format(it) }}")
+            Text(
+                text = "Date: ${
+                    maintenanceWithAssignee.maintenance.date?.let {
+                        dateFormat.format(
+                            it
+                        )
+                    }
+                }"
+            )
             Text(text = "Severity: ${maintenanceWithAssignee.maintenance.severity}")
             Text(text = "Status: ${maintenanceWithAssignee.maintenance.status}")
             Text(text = "Description: ${maintenanceWithAssignee.maintenance.description}")
