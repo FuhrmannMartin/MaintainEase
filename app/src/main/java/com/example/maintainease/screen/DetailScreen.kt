@@ -1,6 +1,5 @@
 package com.example.maintainease.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
@@ -104,27 +102,29 @@ fun DetailScreen(
                 }
             }
             Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
-                Button(
-                    onClick = { dropDownexpanded = true },
-                    modifier = Modifier.align(Alignment.Center)
-                ) {
-                    Text(selectedStatusChange)
-                }
-                DropdownMenu(
-                    expanded = dropDownexpanded,
-                    onDismissRequest = { dropDownexpanded = false }) {
-                    DropdownMenuItem(text = { Text("open") }, onClick = {
-                        selectedStatusChange = "open"
-                        dropDownexpanded = false
-                    })
-                    DropdownMenuItem(text = { Text("in Progress") }, onClick = {
-                        selectedStatusChange = "in progress"
-                        dropDownexpanded = false
-                    })
-                    DropdownMenuItem(text = { Text("Done") }, onClick = {
-                        selectedStatusChange = "done"
-                        dropDownexpanded = false
-                    })
+                if (assignee?.id != null) {
+                    Button(
+                        onClick = { dropDownexpanded = true },
+                        modifier = Modifier.align(Alignment.Center)
+                    ) {
+                        Text(selectedStatusChange)
+                    }
+                    DropdownMenu(
+                        expanded = dropDownexpanded,
+                        onDismissRequest = { dropDownexpanded = false }) {
+                        DropdownMenuItem(text = { Text("open") }, onClick = {
+                            selectedStatusChange = "open"
+                            dropDownexpanded = false
+                        })
+                        DropdownMenuItem(text = { Text("in Progress") }, onClick = {
+                            selectedStatusChange = "in progress"
+                            dropDownexpanded = false
+                        })
+                        DropdownMenuItem(text = { Text("Done") }, onClick = {
+                            selectedStatusChange = "done"
+                            dropDownexpanded = false
+                        })
+                    }
                 }
             }
 
@@ -175,8 +175,14 @@ fun DetailScreen(
                         Text(text = "Add new comment!")
                     }
                     if(selectedStatusChange != "Change Status") {
-                        Button(onClick = { }) {
+                        Button(onClick = { detailScreenViewModel.viewModelScope.launch {
+                            detailScreenViewModel.updateStatus(selectedStatusChange)
+
+                        } }) {
                             Text("Update Status")
+                        }
+                        if(selectedStatusChange == maintenanceTask?.maintenance?.status){
+                            Text("Changed status successfully")
                         }
                     }
                 }

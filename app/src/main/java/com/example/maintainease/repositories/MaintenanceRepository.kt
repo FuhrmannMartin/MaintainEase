@@ -93,6 +93,10 @@ class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO, private 
         maintenanceDAO.updateMaintenance(maintenance)
     }
 
+    suspend fun updateStatus(maintenance: Maintenance){
+        maintenanceDAO.updateMaintenance(maintenance)
+    }
+
 
     companion object {
         @Volatile
