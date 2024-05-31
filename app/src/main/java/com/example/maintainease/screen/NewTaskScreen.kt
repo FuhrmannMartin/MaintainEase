@@ -1,5 +1,6 @@
 package com.example.maintainease.screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,14 +40,15 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 
+@SuppressLint("SimpleDateFormat")
 @Composable
 fun NewTaskScreen(
     navController: NavController
 )
 {
-    var currentDate = Date()
+    val currentDate = Date()
 
-    val dateFormat: SimpleDateFormat = SimpleDateFormat("dd.MM.yyyy")
+    val dateFormat = SimpleDateFormat("dd.MM.yyyy")
     val formattedDate: String = dateFormat.format(currentDate)
 
     val context = LocalContext.current
@@ -71,7 +73,7 @@ fun NewTaskScreen(
     }
     val scrollState = rememberScrollState()
 
-    var dropDownexpanded by remember { mutableStateOf(false) }
+    var dropDownExpanded by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf("low") }
     val coroutineScope = rememberCoroutineScope()
 
@@ -90,11 +92,11 @@ fun NewTaskScreen(
             OutlinedTextField(modifier = Modifier
                 .padding(all = 15.dp)
                 .height(60.dp)
-                .fillMaxWidth(), value = textTitle,  onValueChange = { newText -> textTitle = newText}, label = { Text(text = "Title: ");
+                .fillMaxWidth(), value = textTitle,  onValueChange = { newText -> textTitle = newText}, label = { Text(text = "Title: ")
                 isErrorTitle = textTitle.text.isEmpty()
                 errorMessage = if (isErrorTitle) errorMessageText else ""} )
 
-            isErrorFun(isError = isErrorTitle, errorMessage =errorMessage )
+            IsErrorFun(isError = isErrorTitle, errorMessage =errorMessage )
 
             OutlinedTextField(modifier = Modifier
                 .padding(all = 15.dp)
@@ -103,7 +105,7 @@ fun NewTaskScreen(
                 isErrorDescription = textDescription.text.isEmpty()
                 errorMessage = if (isErrorDescription) errorMessageText else ""} )
 
-            isErrorFun(isError = isErrorDescription, errorMessage =errorMessage )
+            IsErrorFun(isError = isErrorDescription, errorMessage =errorMessage )
 
             OutlinedTextField(modifier = Modifier
                 .padding(all = 15.dp)
@@ -112,31 +114,31 @@ fun NewTaskScreen(
                 isErrorLocation = textLocation.text.isEmpty()
                 errorMessage = if (isErrorLocation) errorMessageText else ""} )
 
-            isErrorFun(isError = isErrorLocation, errorMessage =errorMessage )
+            IsErrorFun(isError = isErrorLocation, errorMessage =errorMessage )
         //   Text(text = "PLACEHOLDER")
         Row(modifier = Modifier.padding(start = 15.dp)) {
             Text("Severity (Standard: Low): ", modifier = Modifier.padding(top=15.dp, start = 20.dp))
             Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
                 Button(
-                    onClick = { dropDownexpanded = true },
+                    onClick = { dropDownExpanded = true },
                     modifier = Modifier.align(Alignment.Center)
                 ) {
                     Text(selectedItem)
                 }
                 DropdownMenu(
-                    expanded = dropDownexpanded,
-                    onDismissRequest = { dropDownexpanded = false }) {
+                    expanded = dropDownExpanded,
+                    onDismissRequest = { dropDownExpanded = false }) {
                     DropdownMenuItem(text = { Text("Low") }, onClick = {
                         selectedItem = "low"
-                        dropDownexpanded = false
+                        dropDownExpanded = false
                     })
                     DropdownMenuItem(text = { Text("Middle") }, onClick = {
                         selectedItem = "middle"
-                        dropDownexpanded = false
+                        dropDownExpanded = false
                     })
                     DropdownMenuItem(text = { Text("High") }, onClick = {
                         selectedItem = "high"
-                        dropDownexpanded = false
+                        dropDownExpanded = false
                     })
                 }
 
@@ -153,7 +155,7 @@ fun NewTaskScreen(
                         errorMessage = errorMessageText
                     }else{
                     coroutineScope.launch {
-                        val mainten = Maintenance(
+                        val maintenance = Maintenance(
                             title = textTitle.text,
                             description = textDescription.text,
                             location = textLocation.text,
@@ -163,7 +165,7 @@ fun NewTaskScreen(
                             picture = null,
                             date = dateFormat.parse(formattedDate)
                         )
-                        viewModel.addMaintenance(maintenance = mainten)
+                        viewModel.addMaintenance(maintenance = maintenance)
                         navController.popBackStack()
                     }
                     } }) {
@@ -174,7 +176,7 @@ fun NewTaskScreen(
                 OutlinedButton(onClick = { navController.popBackStack() }) {
                     Text("Cancel")
                 }
-                isErrorFun(isError = isError, errorMessage = errorMessage)
+                IsErrorFun(isError = isError, errorMessage = errorMessage)
             }
         }
     }
@@ -182,7 +184,7 @@ fun NewTaskScreen(
 
 
 @Composable
-fun isErrorFun(isError: Boolean, errorMessage: String) {
+fun IsErrorFun(isError: Boolean, errorMessage: String) {
     if (isError) {
         Text(
             text = errorMessage,
