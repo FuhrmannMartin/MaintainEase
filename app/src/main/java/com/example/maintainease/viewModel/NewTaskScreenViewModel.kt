@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class NewTaskScreenViewModel(private val repository: MaintenanceRepository) : ViewModel() {
     private val _maintenances = MutableStateFlow<List<Maintenance>>(emptyList())
@@ -18,6 +20,12 @@ class NewTaskScreenViewModel(private val repository: MaintenanceRepository) : Vi
             repository.getAllMaintenance()?.collectLatest { maintenanceList ->
                 _maintenances.value = maintenanceList
             }
+        }
+    }
+
+    suspend fun addMaintenance(maintenance: Maintenance){
+        viewModelScope.launch {
+            repository.addNewMaintenanceTask(maintenance)
         }
     }
 }
