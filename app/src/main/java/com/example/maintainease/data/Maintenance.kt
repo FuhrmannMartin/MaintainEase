@@ -15,7 +15,7 @@ class Maintenance(
     val location: String,
     val date: Date?,
     val severity: String,
-    val status: String,
+    var status: String,
     val description: String,
     val picture: Int?,
     var teamId: Int,
