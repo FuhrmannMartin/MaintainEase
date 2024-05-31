@@ -1,5 +1,6 @@
 package com.example.maintainease.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -29,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
@@ -76,126 +79,153 @@ fun DetailScreen(
             SimpleBottomAppBar(navController = navController)
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-            maintenanceTask?.let { maintenanceTask ->
-                MaintenanceTask(maintenanceWithAssignee = maintenanceTask,
-                    navController = navController,
-                    onItemClick = {})
-            }
-            CustomDivider()
-            Box(modifier = Modifier.padding(start = 16.dp)) {
-                if (assignee?.id == null) {
-                    Button(
-                        onClick = { detailScreenViewModel.viewModelScope.launch { detailScreenViewModel.assignToMe() } },
-                    ) {
-                        Text(text = "Assign to me")
-                    }
-                } else {
-                    Box(
-                        modifier = Modifier.align(Alignment.CenterStart)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(text = "Assigned to ${assignee?.name}!")
-                            Spacer(modifier = Modifier.width(16.dp)) // Add some space between the button and the text
-                        }
-                    }
+        LazyColumn(modifier = Modifier.padding(innerPadding)) {
+            item {
+                maintenanceTask?.let { maintenanceTask ->
+                    MaintenanceTask(maintenanceWithAssignee = maintenanceTask,
+                        navController = navController,
+                        onItemClick = {})
                 }
             }
-            Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
-                if (assignee?.id != null) {
-                    Button(
-                        onClick = { dropDownexpanded = true },
-                        modifier = Modifier.align(Alignment.Center)
-                    ) {
-                        Text(selectedStatusChange)
-                    }
-                    DropdownMenu(
-                        expanded = dropDownexpanded,
-                        onDismissRequest = { dropDownexpanded = false }) {
-                        DropdownMenuItem(text = { Text("open") }, onClick = {
-                            selectedStatusChange = "open"
-                            dropDownexpanded = false
-                        })
-                        DropdownMenuItem(text = { Text("in Progress") }, onClick = {
-                            selectedStatusChange = "in progress"
-                            dropDownexpanded = false
-                        })
-                        DropdownMenuItem(text = { Text("Done") }, onClick = {
-                            selectedStatusChange = "done"
-                            dropDownexpanded = false
-                        })
-                    }
-                }
+            item {
+                CustomDivider()
             }
-
-            CustomDivider()
-            Text(text = "Comments:", modifier = Modifier.padding(start = 16.dp))
-            Column(modifier = Modifier.padding(16.dp)) {
-                val comments = maintenanceTask?.maintenance?.comments
-
-                if (comments != null) {
-                    if (comments.isNotEmpty()) {
-                        for (comment in comments) {
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 8.dp, vertical = 6.dp),
-                                shape = ShapeDefaults.Large,
-                                elevation = CardDefaults.cardElevation(10.dp)
-                            ) {
-                                Text(text = comment)
-                            }
+            item {
+                Box(modifier = Modifier.padding(start = 16.dp)) {
+                    if (assignee?.id == null) {
+                        Button(
+                            onClick = { detailScreenViewModel.viewModelScope.launch { detailScreenViewModel.assignToMe() } },
+                        ) {
+                            Text(text = "Assign to me")
                         }
                     } else {
-                        println("The list is empty.")
+                        Box(
+                            modifier = Modifier.align(Alignment.CenterStart)
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(text = "Assigned to ${assignee?.name}!")
+                                Spacer(modifier = Modifier.width(16.dp)) // Add some space between the button and the text
+                            }
+                        }
                     }
                 }
             }
-            Column(modifier = Modifier.padding(16.dp)) {
-                var comment by remember { mutableStateOf("") }
 
-                TextField(
-                    value = comment,
-                    onValueChange = { comment = it },
-                    label = { Text("Enter your comment") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Button(
-                    onClick = {
-                        detailScreenViewModel.viewModelScope.launch {
-                            detailScreenViewModel.addComment(
-                                comment
-                            )
+            item {
+                Row {
+                    Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
+                        if (assignee?.id != null) {
+                            Button(
+                                onClick = { dropDownexpanded = true },
+                                modifier = Modifier.align(Alignment.Center)
+                            ) {
+                                Text(selectedStatusChange)
+                            }
+                            DropdownMenu(
+                                expanded = dropDownexpanded,
+                                onDismissRequest = { dropDownexpanded = false }) {
+                                DropdownMenuItem(text = { Text("open") }, onClick = {
+                                    selectedStatusChange = "open"
+                                    dropDownexpanded = false
+                                })
+                                DropdownMenuItem(text = { Text("in Progress") }, onClick = {
+                                    selectedStatusChange = "in progress"
+                                    dropDownexpanded = false
+                                })
+                                DropdownMenuItem(text = { Text("Done") }, onClick = {
+                                    selectedStatusChange = "done"
+                                    dropDownexpanded = false
+                                })
+                            }
                         }
-                    },
-                ) {
-                    Text(text = "Add new comment!")
-                }
-                if (selectedStatusChange != "Change Status") {
-                    Button(onClick = {
-                        detailScreenViewModel.viewModelScope.launch {
-                            detailScreenViewModel.updateStatus(selectedStatusChange)
-                        }
-                    }) {
-                        Text("Update Status")
                     }
-                    if (selectedStatusChange == maintenanceTask?.maintenance?.status) {
-                        Text("Changed status successfully")
-                    }
-                }
+                    var statusUpdateSuccess by remember { mutableStateOf(false) }
 
-                maintenanceTask?.let { task ->
+                    if (selectedStatusChange != "Change Status") {
+                        Button(onClick = {
+                            detailScreenViewModel.viewModelScope.launch {
+                                try {
+                                    detailScreenViewModel.updateStatus(selectedStatusChange)
+                                    statusUpdateSuccess = true // Update success status
+                                } catch (e: Exception) {
+                                    // Handle any exceptions if necessary
+                                    statusUpdateSuccess = false // Update failure status
+                                }
+                            }
+                        }) {
+                            Text("Confirm")
+                        }
+                        if (statusUpdateSuccess && selectedStatusChange == maintenanceTask?.maintenance?.status) {
+                            Text("Success Status Update!")
+                        }
+                    }
+                }
+            }
+            item {
+                CustomDivider()
+            }
+
+            item {
+                Text(text = "Comments:", modifier = Modifier.padding(start = 16.dp))
+            }
+            item {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    val comments = maintenanceTask?.maintenance?.comments
+
+                    if (comments != null) {
+                        if (comments.isNotEmpty()) {
+                            for (comment in comments) {
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 8.dp, vertical = 6.dp),
+                                    shape = ShapeDefaults.Large,
+                                    elevation = CardDefaults.cardElevation(10.dp)
+                                ) {
+                                    Text(text = comment)
+                                }
+                            }
+                        } else {
+                            println("The list is empty.")
+                        }
+                    }
+                }
+            }
+            item {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    var comment by remember { mutableStateOf("") }
+
+                    TextField(
+                        value = comment,
+                        onValueChange = { comment = it },
+                        label = { Text("Enter your comment") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
                     Button(
                         onClick = {
                             detailScreenViewModel.viewModelScope.launch {
-                                detailScreenViewModel.deleteTheTask(
-                                    task.maintenance,
-                                    navController
+                                detailScreenViewModel.addComment(
+                                    comment
                                 )
                             }
-                        }
+                        },
                     ) {
-                        Text("Delete Task")
+                        Text(text = "Add new comment!")
+                    }
+
+                    maintenanceTask?.let { task ->
+                        Button(
+                            onClick = {
+                                detailScreenViewModel.viewModelScope.launch {
+                                    detailScreenViewModel.deleteTheTask(
+                                        task.maintenance,
+                                        navController
+                                    )
+                                }
+                            }
+                        ) {
+                            Text(color = Color.Red, text = "Delete Task")
+                        }
                     }
                 }
             }
