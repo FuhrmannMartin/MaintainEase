@@ -1,9 +1,12 @@
-package com.example.maintainease.data
+package com.example.maintainease.data.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.example.maintainease.data.entities.Maintenance
+import com.example.maintainease.data.entities.Staff
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -31,5 +34,8 @@ interface MaintenanceDAO {
 
     @Query("Update staffMaintenanceRelation set staffId = :staffId WHERE maintenanceId = :taskId")
     suspend fun mapTaskToStaff(taskId: Int, staffId: Int)
+
+    @Delete
+    suspend fun deleteMaintenance(maintenance: Maintenance)
 
 }

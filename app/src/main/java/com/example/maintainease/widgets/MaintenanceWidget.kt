@@ -36,8 +36,8 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.maintainease.NavigationHandling
-import com.example.maintainease.data.MaintenanceWithAssignee
-import com.example.maintainease.data.dateFormat
+import com.example.maintainease.data.entities.MaintenanceWithAssignee
+import com.example.maintainease.data.entities.dateFormat
 
 @Composable
 fun ListOfMaintenanceTask(

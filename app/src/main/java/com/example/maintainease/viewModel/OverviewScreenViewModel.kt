@@ -2,7 +2,7 @@ package com.example.maintainease.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.maintainease.data.MaintenanceWithAssignee
+import com.example.maintainease.data.entities.MaintenanceWithAssignee
 import com.example.maintainease.repositories.MaintenanceRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

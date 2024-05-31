@@ -1,13 +1,13 @@
 package com.example.maintainease.repositories
 
 import androidx.room.Transaction
-import com.example.maintainease.data.Maintenance
-import com.example.maintainease.data.MaintenanceDAO
-import com.example.maintainease.data.MaintenanceWithAssignee
-import com.example.maintainease.data.Staff
-import com.example.maintainease.data.StaffDAO
-import com.example.maintainease.data.TeamDAO
-import com.example.maintainease.data.getCurrentUser
+import com.example.maintainease.data.entities.Maintenance
+import com.example.maintainease.data.dao.MaintenanceDAO
+import com.example.maintainease.data.entities.MaintenanceWithAssignee
+import com.example.maintainease.data.entities.Staff
+import com.example.maintainease.data.dao.StaffDAO
+import com.example.maintainease.data.dao.TeamDAO
+import com.example.maintainease.data.entities.getCurrentUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -92,6 +92,9 @@ class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO, private 
 
     suspend fun updateStatus(maintenance: Maintenance){
         maintenanceDAO.updateMaintenance(maintenance)
+    }
+    suspend fun deleteMaintenance(maintenance: Maintenance){
+        maintenanceDAO.deleteMaintenance(maintenance)
     }
 
 

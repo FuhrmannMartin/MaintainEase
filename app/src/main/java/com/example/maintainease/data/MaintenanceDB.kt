@@ -6,6 +6,18 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.maintainease.data.dao.MaintenanceDAO
+import com.example.maintainease.data.dao.StaffDAO
+import com.example.maintainease.data.dao.TeamDAO
+import com.example.maintainease.data.entities.Maintenance
+import com.example.maintainease.data.entities.Staff
+import com.example.maintainease.data.entities.StaffMaintenanceRelation
+import com.example.maintainease.data.entities.Team
+import com.example.maintainease.data.entities.TeamStaffRelation
+import com.example.maintainease.data.entities.getCurrentUser
+import com.example.maintainease.data.entities.getMaintenance
+import com.example.maintainease.data.entities.getStaff
+import com.example.maintainease.data.entities.getTeam
 import com.example.maintainease.repositories.MaintenanceRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +27,7 @@ import kotlinx.coroutines.launch
 @Database(
     entities = [Maintenance::class, Team::class, Staff::class,
         TeamStaffRelation::class, StaffMaintenanceRelation::class],
-    version = 5,
+    version = 9,
     exportSchema = false
 )
 

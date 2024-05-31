@@ -1,18 +1,24 @@
 package com.example.maintainease.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.maintainease.data.Maintenance
-import com.example.maintainease.data.MaintenanceWithAssignee
-import com.example.maintainease.data.Staff
-import com.example.maintainease.data.getCurrentUser
+import androidx.navigation.NavController
+import com.example.maintainease.NavigationHandling
+import com.example.maintainease.data.entities.Maintenance
+import com.example.maintainease.data.entities.MaintenanceWithAssignee
+import com.example.maintainease.data.entities.Staff
+import com.example.maintainease.data.entities.getCurrentUser
 import com.example.maintainease.repositories.MaintenanceRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class DetailScreenViewModel(private val repository: MaintenanceRepository, private val taskId: Int) : ViewModel() {
+class DetailScreenViewModel(
+    private val repository: MaintenanceRepository,
+    private val taskId: Int
+) : ViewModel() {
     private val _maintenance = MutableStateFlow<MaintenanceWithAssignee?>(null)
     val maintenance: StateFlow<MaintenanceWithAssignee?> = _maintenance
     private val _assignee = MutableStateFlow<Staff?>(null)
@@ -46,11 +52,26 @@ class DetailScreenViewModel(private val repository: MaintenanceRepository, priva
         maintenance.value?.let { repository.addCommentToTask(it.maintenance) }
     }
 
-    suspend fun updateStatus(status: String){
+    suspend fun updateStatus(status: String) {
         val task = maintenance.value?.maintenance
         task?.status = status
-            maintenance.value?.let {repository.updateStatus(it.maintenance) }
-
+        maintenance.value?.let {
+            repository.updateStatus(it.maintenance)
+        }
     }
 
+    fun deleteTheTask(maintenance: Maintenance, navController: NavController) {
+        viewModelScope.launch {
+            try {
+                repository.deleteMaintenance(maintenance)
+                navController.navigate(NavigationHandling.OverviewScreen.route) {
+                    popUpTo(NavigationHandling.OverviewScreen.route) {
+                        inclusive = true
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("DetailScreenViewModel", "Error deleting task", e)
+            }
+        }
+    }
 }

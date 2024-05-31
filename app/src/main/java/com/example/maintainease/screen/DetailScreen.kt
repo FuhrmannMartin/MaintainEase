@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.maintainease.data.InjectorUtils
 import com.example.maintainease.viewModel.DetailScreenViewModel
 import com.example.maintainease.widgets.CustomDivider
@@ -59,12 +60,11 @@ fun DetailScreen(
     var dropDownexpanded by remember { mutableStateOf(false) }
     var selectedStatusChange by remember { mutableStateOf("Change Status") }
 
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             SimpleTopAppBar(
-                title = "",// maintenanceTask?.maintenance?.title ?: "Maintenance Task Details",
+                title = maintenanceTask?.maintenance?.title ?: "Maintenance Task Details",
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back Icon")
@@ -128,65 +128,77 @@ fun DetailScreen(
                 }
             }
 
+            CustomDivider()
+            Text(text = "Comments:", modifier = Modifier.padding(start = 16.dp))
+            Column(modifier = Modifier.padding(16.dp)) {
+                val comments = maintenanceTask?.maintenance?.comments
 
-
-
-                CustomDivider()
-                Text(text = "Comments:", modifier = Modifier.padding(start = 16.dp))
-                Column(modifier = Modifier.padding(16.dp)) {
-                    val comments = maintenanceTask?.maintenance?.comments
-
-                    if (comments != null) {
-                        if (comments.isNotEmpty()) {
-                            for (comment in comments) {
-                                Card(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 8.dp, vertical = 6.dp),
-                                    shape = ShapeDefaults.Large,
-                                    elevation = CardDefaults.cardElevation(10.dp)
-                                ) {
-                                    Text(text = comment)
-                                }
+                if (comments != null) {
+                    if (comments.isNotEmpty()) {
+                        for (comment in comments) {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 8.dp, vertical = 6.dp),
+                                shape = ShapeDefaults.Large,
+                                elevation = CardDefaults.cardElevation(10.dp)
+                            ) {
+                                Text(text = comment)
                             }
-                        } else {
-                            println("The list is empty.")
                         }
+                    } else {
+                        println("The list is empty.")
                     }
                 }
-                Column(modifier = Modifier.padding(16.dp)) {
-                    var comment by remember { mutableStateOf("") }
+            }
+            Column(modifier = Modifier.padding(16.dp)) {
+                var comment by remember { mutableStateOf("") }
 
-                    TextField(
-                        value = comment,
-                        onValueChange = { comment = it },
-                        label = { Text("Enter your comment") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                TextField(
+                    value = comment,
+                    onValueChange = { comment = it },
+                    label = { Text("Enter your comment") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Button(
+                    onClick = {
+                        detailScreenViewModel.viewModelScope.launch {
+                            detailScreenViewModel.addComment(
+                                comment
+                            )
+                        }
+                    },
+                ) {
+                    Text(text = "Add new comment!")
+                }
+                if (selectedStatusChange != "Change Status") {
+                    Button(onClick = {
+                        detailScreenViewModel.viewModelScope.launch {
+                            detailScreenViewModel.updateStatus(selectedStatusChange)
+                        }
+                    }) {
+                        Text("Update Status")
+                    }
+                    if (selectedStatusChange == maintenanceTask?.maintenance?.status) {
+                        Text("Changed status successfully")
+                    }
+                }
+
+                maintenanceTask?.let { task ->
                     Button(
                         onClick = {
                             detailScreenViewModel.viewModelScope.launch {
-                                detailScreenViewModel.addComment(
-                                    comment
+                                detailScreenViewModel.deleteTheTask(
+                                    task.maintenance,
+                                    navController
                                 )
                             }
-                        },
+                        }
                     ) {
-                        Text(text = "Add new comment!")
-                    }
-                    if(selectedStatusChange != "Change Status") {
-                        Button(onClick = { detailScreenViewModel.viewModelScope.launch {
-                            detailScreenViewModel.updateStatus(selectedStatusChange)
-
-                        } }) {
-                            Text("Update Status")
-                        }
-                        if(selectedStatusChange == maintenanceTask?.maintenance?.status){
-                            Text("Changed status successfully")
-                        }
+                        Text("Delete Task")
                     }
                 }
             }
         }
     }
-
+}

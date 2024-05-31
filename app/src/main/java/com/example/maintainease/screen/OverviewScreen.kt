@@ -24,7 +24,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.maintainease.data.InjectorUtils
-import com.example.maintainease.data.MaintenanceWithAssignee
+import com.example.maintainease.data.entities.MaintenanceWithAssignee
 import com.example.maintainease.viewModel.OverviewScreenViewModel
 import com.example.maintainease.widgets.ListOfMaintenanceTask
 import com.example.maintainease.widgets.MyCheckbox
