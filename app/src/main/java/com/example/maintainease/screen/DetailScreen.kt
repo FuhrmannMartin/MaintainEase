@@ -13,6 +13,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -53,6 +55,10 @@ fun DetailScreen(
     )
     val maintenanceTask by detailScreenViewModel.maintenance.collectAsState()
     val assignee by detailScreenViewModel.assignee.collectAsState()
+
+    var dropDownexpanded by remember { mutableStateOf(false) }
+    var selectedStatusChange by remember { mutableStateOf("Change Status") }
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -95,46 +101,92 @@ fun DetailScreen(
                     }
                 }
             }
-            CustomDivider()
-            Text(text = "Comments:", modifier = Modifier.padding(start = 16.dp))
-            Column(modifier = Modifier.padding(16.dp)) {
-                val comments = maintenanceTask?.maintenance?.comments
-
-                if (comments != null) {
-                    if (comments.isNotEmpty()) {
-                        for (comment in comments) {
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 8.dp, vertical = 6.dp),
-                                shape = ShapeDefaults.Large,
-                                elevation = CardDefaults.cardElevation(10.dp)
-                            ) {
-                                Text(text = comment)
-                            }
-                        }
-                    } else {
-                        println("The list is empty.")
+            Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
+                if (assignee?.id != null) {
+                    Button(
+                        onClick = { dropDownexpanded = true },
+                        modifier = Modifier.align(Alignment.Center)
+                    ) {
+                        Text(selectedStatusChange)
+                    }
+                    DropdownMenu(
+                        expanded = dropDownexpanded,
+                        onDismissRequest = { dropDownexpanded = false }) {
+                        DropdownMenuItem(text = { Text("open") }, onClick = {
+                            selectedStatusChange = "open"
+                            dropDownexpanded = false
+                        })
+                        DropdownMenuItem(text = { Text("in Progress") }, onClick = {
+                            selectedStatusChange = "in progress"
+                            dropDownexpanded = false
+                        })
+                        DropdownMenuItem(text = { Text("Done") }, onClick = {
+                            selectedStatusChange = "done"
+                            dropDownexpanded = false
+                        })
                     }
                 }
             }
-            Column(modifier = Modifier.padding(16.dp)) {
-                var comment by remember { mutableStateOf("") }
 
-                TextField(
-                    value = comment,
-                    onValueChange = { comment = it },
-                    label = { Text("Enter your comment") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Button(
-                    onClick = { detailScreenViewModel.viewModelScope.launch { detailScreenViewModel.addComment(comment) }
-                        comment = ""
-                              },
-                ) {
-                    Text(text = "Add new comment!")
+
+
+
+                CustomDivider()
+                Text(text = "Comments:", modifier = Modifier.padding(start = 16.dp))
+                Column(modifier = Modifier.padding(16.dp)) {
+                    val comments = maintenanceTask?.maintenance?.comments
+
+                    if (comments != null) {
+                        if (comments.isNotEmpty()) {
+                            for (comment in comments) {
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 8.dp, vertical = 6.dp),
+                                    shape = ShapeDefaults.Large,
+                                    elevation = CardDefaults.cardElevation(10.dp)
+                                ) {
+                                    Text(text = comment)
+                                }
+                            }
+                        } else {
+                            println("The list is empty.")
+                        }
+                    }
+                }
+                Column(modifier = Modifier.padding(16.dp)) {
+                    var comment by remember { mutableStateOf("") }
+
+                    TextField(
+                        value = comment,
+                        onValueChange = { comment = it },
+                        label = { Text("Enter your comment") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Button(
+                        onClick = {
+                            detailScreenViewModel.viewModelScope.launch {
+                                detailScreenViewModel.addComment(
+                                    comment
+                                )
+                            }
+                        },
+                    ) {
+                        Text(text = "Add new comment!")
+                    }
+                    if(selectedStatusChange != "Change Status") {
+                        Button(onClick = { detailScreenViewModel.viewModelScope.launch {
+                            detailScreenViewModel.updateStatus(selectedStatusChange)
+
+                        } }) {
+                            Text("Update Status")
+                        }
+                        if(selectedStatusChange == maintenanceTask?.maintenance?.status){
+                            Text("Changed status successfully")
+                        }
+                    }
                 }
             }
         }
     }
-}
+

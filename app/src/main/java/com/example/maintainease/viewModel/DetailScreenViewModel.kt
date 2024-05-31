@@ -2,6 +2,7 @@ package com.example.maintainease.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.maintainease.data.Maintenance
 import com.example.maintainease.data.MaintenanceWithAssignee
 import com.example.maintainease.data.Staff
 import com.example.maintainease.data.getCurrentUser
@@ -43,6 +44,13 @@ class DetailScreenViewModel(private val repository: MaintenanceRepository, priva
             task.comments = c
         }
         maintenance.value?.let { repository.addCommentToTask(it.maintenance) }
+    }
+
+    suspend fun updateStatus(status: String){
+        val task = maintenance.value?.maintenance
+        task?.status = status
+            maintenance.value?.let {repository.updateStatus(it.maintenance) }
+
     }
 
 }
