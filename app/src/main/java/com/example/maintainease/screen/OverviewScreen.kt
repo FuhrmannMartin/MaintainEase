@@ -1,5 +1,6 @@
 package com.example.maintainease.screen
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -78,13 +85,21 @@ fun OverviewScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
+            Row {
+
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(Icons.Default.KeyboardArrowLeft, contentDescription = "Logout")
+
+            }
             SimpleTopAppBar(title = "MaintainEase")
-        },
+        } },
         bottomBar = {
             SimpleBottomAppBar(navController = navController)
         },
     ) { innerPadding ->
-        LazyColumn(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
+        LazyColumn(modifier = Modifier
+            .padding(innerPadding)
+            .fillMaxSize()) {
             item {
                 Text(
                     text = "Maintenance Tasks",
