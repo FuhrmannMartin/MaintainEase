@@ -9,6 +9,6 @@ class NewTaskScreenViewModel(private val repository: MaintenanceRepository) : Vi
 
     suspend fun addMaintenance(maintenance: Maintenance){
         getCurrentUser()["teamId"]?.let { maintenance.teamId = it }
-        repository.addNewMaintenanceTask(maintenance)
+        repository.addMaintenanceWithRelation(maintenance)
     }
 }
