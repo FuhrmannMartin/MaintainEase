@@ -18,7 +18,7 @@ class Maintenance(
     val status: String,
     val description: String,
     val picture: Int?,
-    val teamId: Int,
+    var teamId: Int,
     var comments: List<String> = emptyList()
 )
 

@@ -85,9 +85,14 @@ class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO, private 
         maintenanceDAO.mapTaskToStaff(taskId = taskId, staffId = staffId)
     }
 
+
+    suspend fun addNewMaintenanceTask(Maintenance: Maintenance) = maintenanceDAO.insertMaintenance(Maintenance)
+
+    
     suspend fun addCommentToTask(maintenance: Maintenance) {
         maintenanceDAO.updateMaintenance(maintenance)
     }
+
 
     companion object {
         @Volatile
