@@ -2,7 +2,6 @@ package com.example.maintainease.data.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.maintainease.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -17,7 +16,7 @@ class Maintenance(
     val severity: String,
     var status: String,
     val description: String,
-    val picture: Int?,
+    val picture: String?,
     var teamId: Int,
     var comments: List<String> = emptyList()
 )
@@ -39,7 +38,7 @@ fun getMaintenance(): List<Maintenance> {
             severity = "low",
             status = "open",
             description = "Die Lampe muss ausgetauscht werden E27",
-            picture = R.drawable.lampe_task,
+            picture = "android.resource://com.example.maintainease/drawable/lampe_task",
             teamId = 1,
             comments = emptyList()
         ),
@@ -50,7 +49,7 @@ fun getMaintenance(): List<Maintenance> {
             severity = "high",
             status = "open",
             description = "Das Gelände ist lose, gehen darauf ist sehr gefährlich",
-            picture = R.drawable.treppenhaus_task,
+            picture = "android.resource://com.example.maintainease/drawable/lampe_task",
             teamId = 1,
         ),
         Maintenance(
@@ -60,7 +59,7 @@ fun getMaintenance(): List<Maintenance> {
             severity = "low",
             status = "open",
             description = "Wand ist schmutzig, muss neu angestrichen werden.",
-            picture = R.drawable.wand_task,
+            picture = "android.resource://com.example.maintainease/drawable/lampe_task",
             teamId = 1,
         ),
         Maintenance(
@@ -70,7 +69,7 @@ fun getMaintenance(): List<Maintenance> {
             severity = "middle",
             status = "in progress",
             description = "Bitte entstopfen",
-            picture = R.drawable.wc_task,
+            picture = "android.resource://com.example.maintainease/drawable/lampe_task",
             teamId = 1,
         ),
         Maintenance(
@@ -80,7 +79,7 @@ fun getMaintenance(): List<Maintenance> {
             severity = "low",
             status = "in progress",
             description = "Bitte entstopfen",
-            picture = R.drawable.laser_task,
+            picture = "android.resource://com.example.maintainease/drawable/lampe_task",
             teamId = 1,
         ),
         Maintenance(
@@ -90,7 +89,7 @@ fun getMaintenance(): List<Maintenance> {
             severity = "middle",
             status = "done",
             description = "Laser im Labor ist kaputt, muss ausgetauscht werden",
-            picture = R.drawable.laser_task,
+            picture = "android.resource://com.example.maintainease/drawable/lampe_task",
             teamId = 1,
         )
     )

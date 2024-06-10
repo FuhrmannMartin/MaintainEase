@@ -67,6 +67,14 @@ dependencies {
 
     implementation("androidx.room:room-ktx:$roomVersion")
 
+    implementation ("androidx.camera:camera-core:1.3.3")
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation ("androidx.camera:camera-camera2:1.3.3")
+    implementation ("androidx.camera:camera-lifecycle:1.3.3")
+    implementation ("androidx.camera:camera-view:1.3.3")
+    implementation ("androidx.camera:camera-extensions:1.3.3")
+
+
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")

@@ -1,6 +1,10 @@
 package com.example.maintainease.screen
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.net.Uri
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,9 +35,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.maintainease.data.InjectorUtils
 import com.example.maintainease.data.entities.Maintenance
 import com.example.maintainease.viewModel.NewTaskScreenViewModel
+import com.example.maintainease.widgets.CameraAdd
+import com.example.maintainease.widgets.CheckPermissions
 import com.example.maintainease.widgets.SimpleBottomAppBar
 import com.example.maintainease.widgets.SimpleTopAppBar
 import kotlinx.coroutines.launch
@@ -44,8 +51,7 @@ import java.util.Date
 @Composable
 fun NewTaskScreen(
     navController: NavController
-)
-{
+) {
     val currentDate = Date()
 
     val dateFormat = SimpleDateFormat("dd.MM.yyyy")
@@ -53,8 +59,9 @@ fun NewTaskScreen(
 
     val context = LocalContext.current
     //val newTaskScreenViewModel: NewTaskScreenViewModel =
-        val viewModel: NewTaskScreenViewModel = viewModel(factory = InjectorUtils.provideNewTaskScreenViewModelFactory(context))
-   // val maintenances by newTaskScreenViewModel.maintenances.collectAsState()
+    val viewModel: NewTaskScreenViewModel =
+        viewModel(factory = InjectorUtils.provideNewTaskScreenViewModelFactory(context))
+    // val maintenances by newTaskScreenViewModel.maintenances.collectAsState()
     var textTitle by remember {
         mutableStateOf(TextFieldValue(""))
     }
@@ -77,6 +84,21 @@ fun NewTaskScreen(
     var selectedItem by remember { mutableStateOf("low") }
     val coroutineScope = rememberCoroutineScope()
 
+    // Camera Stuff
+    var showCamera by remember { mutableStateOf(false) }
+    var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var filledImageUri by remember { mutableStateOf<String?>(null) }
+
+    CheckPermissions(
+        permission = Manifest.permission.CAMERA,
+        onPermissionGranted = {
+            showCamera = true
+        },
+        onPermissionDenied = {
+            errorMessage = "Camera permission is required to use this feature."
+        }
+    )
+
     Scaffold(
         topBar = {
             SimpleTopAppBar(title = "Add a new Maintenance Task")
@@ -85,90 +107,148 @@ fun NewTaskScreen(
             SimpleBottomAppBar(navController = navController)
         },
     ) { innerPadding ->
-        Column(modifier = Modifier
-            .padding(innerPadding)
-            .verticalScroll(state = scrollState)) {
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .verticalScroll(state = scrollState)
+        ) {
 
             OutlinedTextField(modifier = Modifier
                 .padding(all = 15.dp)
                 .height(60.dp)
-                .fillMaxWidth(), value = textTitle,  onValueChange = { newText -> textTitle = newText}, label = { Text(text = "Title: ")
-                isErrorTitle = textTitle.text.isEmpty()
-                errorMessage = if (isErrorTitle) errorMessageText else ""} )
+                .fillMaxWidth(),
+                value = textTitle,
+                onValueChange = { newText -> textTitle = newText },
+                label = {
+                    Text(text = "Title: ")
+                    isErrorTitle = textTitle.text.isEmpty()
+                    errorMessage = if (isErrorTitle) errorMessageText else ""
+                })
 
-            IsErrorFun(isError = isErrorTitle, errorMessage =errorMessage )
+            IsErrorFun(isError = isErrorTitle, errorMessage = errorMessage)
 
             OutlinedTextField(modifier = Modifier
                 .padding(all = 15.dp)
                 .height(200.dp)
-                .fillMaxWidth(), value = textDescription,  onValueChange = { newText -> textDescription = newText}, label = { Text(text = "Description: ")
-                isErrorDescription = textDescription.text.isEmpty()
-                errorMessage = if (isErrorDescription) errorMessageText else ""} )
+                .fillMaxWidth(),
+                value = textDescription,
+                onValueChange = { newText -> textDescription = newText },
+                label = {
+                    Text(text = "Description: ")
+                    isErrorDescription = textDescription.text.isEmpty()
+                    errorMessage = if (isErrorDescription) errorMessageText else ""
+                })
 
-            IsErrorFun(isError = isErrorDescription, errorMessage =errorMessage )
+            IsErrorFun(isError = isErrorDescription, errorMessage = errorMessage)
 
             OutlinedTextField(modifier = Modifier
                 .padding(all = 15.dp)
                 .height(100.dp)
-                .fillMaxWidth(), value = textLocation,  onValueChange = { newTextLocation -> textLocation = newTextLocation}, label = { Text(text = "Location: ")
-                isErrorLocation = textLocation.text.isEmpty()
-                errorMessage = if (isErrorLocation) errorMessageText else ""} )
+                .fillMaxWidth(),
+                value = textLocation,
+                onValueChange = { newTextLocation -> textLocation = newTextLocation },
+                label = {
+                    Text(text = "Location: ")
+                    isErrorLocation = textLocation.text.isEmpty()
+                    errorMessage = if (isErrorLocation) errorMessageText else ""
+                })
 
-            IsErrorFun(isError = isErrorLocation, errorMessage =errorMessage )
-        //   Text(text = "PLACEHOLDER")
-        Row(modifier = Modifier.padding(start = 15.dp)) {
-            Text("Severity (Standard: Low): ", modifier = Modifier.padding(top=15.dp, start = 20.dp))
-            Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
-                Button(
-                    onClick = { dropDownExpanded = true },
-                    modifier = Modifier.align(Alignment.Center)
-                ) {
-                    Text(selectedItem)
+            IsErrorFun(isError = isErrorLocation, errorMessage = errorMessage)
+            //   Text(text = "PLACEHOLDER")
+            Row(modifier = Modifier.padding(start = 15.dp)) {
+                Text(
+                    "Severity (Standard: Low): ",
+                    modifier = Modifier.padding(top = 15.dp, start = 20.dp)
+                )
+                Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
+                    Button(
+                        onClick = { dropDownExpanded = true },
+                        modifier = Modifier.align(Alignment.Center)
+                    ) {
+                        Text(selectedItem)
+                    }
+                    DropdownMenu(
+                        expanded = dropDownExpanded,
+                        onDismissRequest = { dropDownExpanded = false }) {
+                        DropdownMenuItem(text = { Text("Low") }, onClick = {
+                            selectedItem = "low"
+                            dropDownExpanded = false
+                        })
+                        DropdownMenuItem(text = { Text("Middle") }, onClick = {
+                            selectedItem = "middle"
+                            dropDownExpanded = false
+                        })
+                        DropdownMenuItem(text = { Text("High") }, onClick = {
+                            selectedItem = "high"
+                            dropDownExpanded = false
+                        })
+                    }
+
+
                 }
-                DropdownMenu(
-                    expanded = dropDownExpanded,
-                    onDismissRequest = { dropDownExpanded = false }) {
-                    DropdownMenuItem(text = { Text("Low") }, onClick = {
-                        selectedItem = "low"
-                        dropDownExpanded = false
-                    })
-                    DropdownMenuItem(text = { Text("Middle") }, onClick = {
-                        selectedItem = "middle"
-                        dropDownExpanded = false
-                    })
-                    DropdownMenuItem(text = { Text("High") }, onClick = {
-                        selectedItem = "high"
-                        dropDownExpanded = false
-                    })
-                }
-
-
             }
-        }
+            Row() {
+                if (showCamera) {
+                    CameraAdd(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp),
+                        onImageCaptured = { uri ->
+                            capturedImageUri = uri
+                            filledImageUri = uri.toString()
+                            showCamera = false
+                        },
+                        onError = { exception ->
+                            Log.e("CameraX", "Camera error", exception)
+                        }
+                    )
+                } else {
+                    Button(
+                        onClick = { showCamera = true },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Text(text = "Open Camera")
+                    }
+                    capturedImageUri?.let {
+                        Image(
+                            painter = rememberAsyncImagePainter(model = it),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp)
+                        )
+                    }
+                }
+            }
 
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(30.dp)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(30.dp)
+            ) {
                 OutlinedButton(onClick = {
-                    if(isErrorTitle || isErrorDescription || isErrorLocation){
+                    if (isErrorTitle || isErrorDescription || isErrorLocation) {
                         isError = true
                         errorMessage = errorMessageText
-                    }else{
-                    coroutineScope.launch {
-                        val maintenance = Maintenance(
-                            title = textTitle.text,
-                            description = textDescription.text,
-                            location = textLocation.text,
-                            severity = selectedItem,
-                            status = "open",
-                            teamId = 0,
-                            picture = null,
-                            date = dateFormat.parse(formattedDate)
-                        )
-                        viewModel.addMaintenance(maintenance = maintenance)
-                        navController.popBackStack()
+                    } else {
+                        coroutineScope.launch {
+                            val maintenance = Maintenance(
+                                title = textTitle.text,
+                                description = textDescription.text,
+                                location = textLocation.text,
+                                severity = selectedItem,
+                                status = "open",
+                                teamId = 0,
+                                picture = capturedImageUri?.toString(),
+                                date = dateFormat.parse(formattedDate)
+                            )
+                            viewModel.addMaintenance(maintenance = maintenance)
+                            navController.popBackStack()
+                        }
                     }
-                    } }) {
+                }) {
                     Text("Submit")
                 }
 
