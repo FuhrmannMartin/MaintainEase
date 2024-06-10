@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 @Database(
     entities = [Maintenance::class, Team::class, Staff::class,
         TeamStaffRelation::class, StaffMaintenanceRelation::class],
-    version = 9,
+    version = 10,
     exportSchema = false
 )
 
