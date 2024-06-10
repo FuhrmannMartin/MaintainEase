@@ -13,10 +13,10 @@ class Team(
 fun getTeam(): List<Team> {
     return listOf(
         Team(
-            title = "Fruehschicht"
+            title = "Gardening"
         ),
         Team(
-            title = "Spaetschicht"
+            title = "Electricity"
         )
     )
 }

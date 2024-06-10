@@ -3,8 +3,6 @@ package com.example.maintainease.screen
 import android.Manifest
 import android.annotation.SuppressLint
 import android.net.Uri
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,11 +33,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
 import com.example.maintainease.data.InjectorUtils
 import com.example.maintainease.data.entities.Maintenance
 import com.example.maintainease.viewModel.NewTaskScreenViewModel
-import com.example.maintainease.widgets.CameraAdd
 import com.example.maintainease.widgets.CheckPermissions
 import com.example.maintainease.widgets.SimpleBottomAppBar
 import com.example.maintainease.widgets.SimpleTopAppBar
@@ -187,7 +183,7 @@ fun NewTaskScreen(
 
                 }
             }
-            Row() {
+            /* Row() {
                 if (showCamera) {
                     CameraAdd(
                         modifier = Modifier
@@ -221,7 +217,7 @@ fun NewTaskScreen(
                         )
                     }
                 }
-            }
+            } */
 
             Row(
                 modifier = Modifier
@@ -241,7 +237,7 @@ fun NewTaskScreen(
                                 severity = selectedItem,
                                 status = "open",
                                 teamId = 0,
-                                picture = capturedImageUri?.toString(),
+                                picture = null,
                                 date = dateFormat.parse(formattedDate)
                             )
                             viewModel.addMaintenance(maintenance = maintenance)
