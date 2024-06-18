@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,33 +24,44 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.maintainease.data.InjectorUtils
 import com.example.maintainease.data.entities.MaintenanceWithAssignee
-import com.example.maintainease.data.entities.getCurrentUser
-import com.example.maintainease.data.entities.getTeam
 import com.example.maintainease.viewModel.OverviewScreenViewModel
 import com.example.maintainease.widgets.ListOfMaintenanceTask
 import com.example.maintainease.widgets.MyCheckbox
 import com.example.maintainease.widgets.SimpleBottomAppBar
 import com.example.maintainease.widgets.SimpleTopAppBar
+import com.example.maintainease.widgets.UserSelectionScreen
 
+
+data class UserSelection(
+    var staffId: Int = 1,
+    var teamId: Int = 1
+)
 
 @Composable
 fun OverviewScreen(navController: NavController) {
+    // ViewModel initialization
     val context = LocalContext.current
     val overviewScreenViewModel: OverviewScreenViewModel =
         viewModel(factory = InjectorUtils.provideOverviewScreenViewModelFactory(context))
+
+    // Collecting state from ViewModel
     val openMaintenances by overviewScreenViewModel.openMaintenances.collectAsState()
     val inProgressMaintenances by overviewScreenViewModel.inProgressMaintenances.collectAsState()
     val doneMaintenances by overviewScreenViewModel.doneMaintenances.collectAsState()
     val cancelledMaintenances by overviewScreenViewModel.cancelledMaintenances.collectAsState()
 
-    // A single mutableStateOf for managing the checkboxes' states
+    // State for managing checkboxes
     var checkedState by remember { mutableStateOf(CheckedState.None) }
+
+    // State for user selection
+    var userSelection by remember { mutableStateOf(UserSelection()) }
+
+    // Filtering based on checkbox state
     var filteredOpenMaintenances = openMaintenances
     var filteredInProgressMaintenances = inProgressMaintenances
     var filteredDoneMaintenances = doneMaintenances
     var filteredCancelledMaintenances = cancelledMaintenances
 
-    // Update filtered lists based on the checkedState
     when (checkedState) {
         CheckedState.MyTasks -> {
             filteredOpenMaintenances =
@@ -88,12 +98,8 @@ fun OverviewScreen(navController: NavController) {
     ) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
             item {
-                val teamTitle = getLoggedInTeamTitle()
-                Text(
-                    text = "Team $teamTitle",
-                    modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.headlineSmall
-                )
+                UserSelectionScreen(userSelection) { staffId, teamId ->
+                    overviewScreenViewModel.updateCurrentUser(staffId, teamId)}
             }
             item {
                 Row(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -114,12 +120,14 @@ fun OverviewScreen(navController: NavController) {
                     )
                 }
             }
-            items(listOf(
-                "Open" to filteredOpenMaintenances,
-                "In Progress" to filteredInProgressMaintenances,
-                "Done" to filteredDoneMaintenances,
-                "Cancelled" to filteredCancelledMaintenances
-            )) { (name, items) ->
+            items(
+                listOf(
+                    "Open" to filteredOpenMaintenances,
+                    "In Progress" to filteredInProgressMaintenances,
+                    "Done" to filteredDoneMaintenances,
+                    "Cancelled" to filteredCancelledMaintenances
+                )
+            ) { (name, items) ->
                 MaintenanceBox(
                     name = name,
                     items = items,
@@ -130,6 +138,7 @@ fun OverviewScreen(navController: NavController) {
         }
     }
 }
+
 
 enum class CheckedState {
     None,
@@ -150,13 +159,4 @@ fun MaintenanceBox(name: String, items: List<MaintenanceWithAssignee>, navContro
             )
         }
     }
-}
-
-private fun getLoggedInTeamTitle(): String {
-    val currentUser = getCurrentUser()
-    val teamId = currentUser["teamId"] ?: return "Unknown"
-
-    val teams = getTeam()
-    val team = teams.find { it.id == teamId }
-    return team?.title ?: "Unknown"
 }

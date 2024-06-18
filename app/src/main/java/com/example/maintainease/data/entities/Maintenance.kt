@@ -38,7 +38,7 @@ fun getMaintenance(): List<Maintenance> {
         Maintenance(
             title = "Mowing the lawn",
             location = "Rose-Garden",
-            date = dateFormat.parse(""),
+            date = dateFormat.parse("18.06.2024"),
             severity = "low",
             status = "open",
             description = "Please mow the law at the Rose-Garden",
@@ -49,7 +49,7 @@ fun getMaintenance(): List<Maintenance> {
         Maintenance(
             title = "Plant flowers",
             location = "C.4.50 Balcony",
-            date = dateFormat.parse(""),
+            date = dateFormat.parse("18.06.2024"),
             severity = "high",
             status = "working",
             description = "The customer complained, that the flowers in Room C.4.50 are dead. Please Replace Flowers",
@@ -60,7 +60,7 @@ fun getMaintenance(): List<Maintenance> {
         Maintenance(
             title = "Pruning shrubs",
             location = "Labyrinth-Garden",
-            date = dateFormat.parse(""),
+            date = dateFormat.parse("18.06.2024"),
             severity = "low",
             status = "cancel",
             description = "The shrubs need regular maintenance ",
@@ -92,7 +92,7 @@ fun getMaintenance(): List<Maintenance> {
         Maintenance(
             title = "Change Light-Bulbs",
             location = "A.3.40",
-            date = dateFormat.parse(""),
+            date = dateFormat.parse("18.06.2024"),
             severity = "middle",
             status = "done",
             description = "In a Guest Room in Truck A the reading lamp is not working.",
@@ -103,7 +103,7 @@ fun getMaintenance(): List<Maintenance> {
         Maintenance(
             title = "Replace Cabling",
             location = "M.4.10",
-            date = dateFormat.parse(""),
+            date = dateFormat.parse("18.06.2024"),
             severity = "low",
             status = "working",
             description = "The cables in the Meeting Room are already pretty old and often have loose contact",
