@@ -25,6 +25,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.maintainease.data.InjectorUtils
 import com.example.maintainease.data.entities.MaintenanceWithAssignee
+import com.example.maintainease.data.entities.getCurrentUser
+import com.example.maintainease.data.entities.getTeam
 import com.example.maintainease.viewModel.OverviewScreenViewModel
 import com.example.maintainease.widgets.ListOfMaintenanceTask
 import com.example.maintainease.widgets.MyCheckbox
@@ -86,8 +88,9 @@ fun OverviewScreen(navController: NavController) {
     ) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
             item {
+                val teamTitle = getLoggedInTeamTitle()
                 Text(
-                    text = "Maintenance Tasks",
+                    text = "Team $teamTitle",
                     modifier = Modifier.padding(16.dp),
                     style = MaterialTheme.typography.headlineSmall
                 )
@@ -147,4 +150,13 @@ fun MaintenanceBox(name: String, items: List<MaintenanceWithAssignee>, navContro
             )
         }
     }
+}
+
+private fun getLoggedInTeamTitle(): String {
+    val currentUser = getCurrentUser()
+    val teamId = currentUser["teamId"] ?: return "Unknown"
+
+    val teams = getTeam()
+    val team = teams.find { it.id == teamId }
+    return team?.title ?: "Unknown"
 }

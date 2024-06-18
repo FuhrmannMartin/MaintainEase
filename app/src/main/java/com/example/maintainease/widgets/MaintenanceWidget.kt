@@ -73,7 +73,6 @@ fun MaintenanceTask(
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 6.dp)
             .clickable {
-                //navController.navigate(NavigationHandling.Detail.createRoute(maintenanceWithAssignee.maintenance.id))
                 onItemClick(maintenanceWithAssignee.maintenance.id)
             },
         shape = ShapeDefaults.Large,

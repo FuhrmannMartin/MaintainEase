@@ -121,9 +121,9 @@ fun MyCheckbox(isChecked: Boolean, onCheckedChange: (Boolean) -> Unit, text: Str
     Row(verticalAlignment = Alignment.CenterVertically) {
         Checkbox(
             checked = isChecked,
-            onCheckedChange = onCheckedChange // No need for additional lambda here
+            onCheckedChange = onCheckedChange
         )
-        Spacer(modifier = Modifier.width(2.dp)) // Adjust spacing between checkbox and text
+        Spacer(modifier = Modifier.width(2.dp))
         Text(text = text)
     }
 }

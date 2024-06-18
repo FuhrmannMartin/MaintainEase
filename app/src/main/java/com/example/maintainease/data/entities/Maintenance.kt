@@ -30,39 +30,63 @@ class MaintenanceWithAssignee(
 val locale = Locale("German", "Austria")
 val dateFormat = SimpleDateFormat("dd.MM.yyyy", locale)
 
+//  Gardening = TeamId 1, Electrician = TeamId 2
+// Options for status: open, working, done, cancel
+// Options for severity: high, middle, low
 fun getMaintenance(): List<Maintenance> {
     return listOf(
         Maintenance(
             title = "Mowing the lawn",
-            location = "",
+            location = "Rose-Garden",
             date = dateFormat.parse(""),
-            severity = "",
-            status = "cancel",
-            description = "",
-            picture = 0,
+            severity = "low",
+            status = "open",
+            description = "Please mow the law at the Rose-Garden",
+            picture = R.drawable.rose_garden,
             teamId = 1,
             comments = emptyList()
+        ),
+        Maintenance(
+            title = "Plant flowers",
+            location = "C.4.50 Balcony",
+            date = dateFormat.parse(""),
+            severity = "high",
+            status = "working",
+            description = "The customer complained, that the flowers in Room C.4.50 are dead. Please Replace Flowers",
+            picture = R.drawable.c_4_50_balcony,
+            teamId = 1,
+            comments = emptyList()
+        ),
+        Maintenance(
+            title = "Pruning shrubs",
+            location = "Labyrinth-Garden",
+            date = dateFormat.parse(""),
+            severity = "low",
+            status = "cancel",
+            description = "The shrubs need regular maintenance ",
+            picture = R.drawable.labyrinth_garden,
+            teamId = 1,
+            comments = emptyList()
+        ),
+        Maintenance(
+            title = "Water entry plants",
+            location = "E.0.0",
+            date = dateFormat.parse("13.05.2024"),
+            severity = "middle",
+            status = "done",
+            description = "Watering for the Plants in the Entry needed",
+            picture = R.drawable.e_0_0,
+            teamId = 1,
         ),
         Maintenance(
             title = "Work on broken elevator",
             location = "El.1",
             date = dateFormat.parse("10.06.2024"),
             severity = "high",
-            status = "done",
+            status = "open",
             description = "The Nr. 1 Elevator is broken and is very important to transport our guests. Highest priority",
-            picture = 0,
+            picture = R.drawable.el_1,
             teamId = 2,
-            comments = emptyList()
-        ),
-        Maintenance(
-            title = "Plant flowers",
-            location = "",
-            date = dateFormat.parse(""),
-            severity = "",
-            status = "done",
-            description = "",
-            picture = 0,
-            teamId = 1,
             comments = emptyList()
         ),
         Maintenance(
@@ -70,21 +94,10 @@ fun getMaintenance(): List<Maintenance> {
             location = "A.3.40",
             date = dateFormat.parse(""),
             severity = "middle",
-            status = "cancel",
+            status = "done",
             description = "In a Guest Room in Truck A the reading lamp is not working.",
-            picture = 0,
+            picture = R.drawable.a_3_40,
             teamId = 2,
-            comments = emptyList()
-        ),
-        Maintenance(
-            title = "Pruning shrubs",
-            location = "",
-            date = dateFormat.parse(""),
-            severity = "",
-            status = "working",
-            description = "",
-            picture = 0,
-            teamId = 1,
             comments = emptyList()
         ),
         Maintenance(
@@ -94,28 +107,18 @@ fun getMaintenance(): List<Maintenance> {
             severity = "low",
             status = "working",
             description = "The cables in the Meeting Room are already pretty old and often have loose contact",
-            picture = 0,
+            picture = R.drawable.m_4_10,
             teamId = 2,
             comments = emptyList()
-        ),
-        Maintenance(
-            title = "Water entry plans",
-            location = "Streppenhaus von Gebäude A, 1. Stock",
-            date = dateFormat.parse("13.05.2024"),
-            severity = "high",
-            status = "open",
-            description = "Das Gelände ist lose, gehen darauf ist sehr gefährlich",
-            picture = R.drawable.treppenhaus_task,
-            teamId = 1,
         ),
         Maintenance(
             title = "Troubleshoot Phone",
             location = "B.2.14",
             date = dateFormat.parse("13.05.2024"),
             severity = "high",
-            status = "open",
+            status = "cancel",
             description = "The Phone in the Guest Room can't call the reception but other numbers. Reason unknown.",
-            picture = R.drawable.treppenhaus_task,
+            picture = R.drawable.b_2_14,
             teamId = 2,
         )
     )
