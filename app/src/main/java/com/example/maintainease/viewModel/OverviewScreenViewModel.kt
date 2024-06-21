@@ -3,7 +3,6 @@ package com.example.maintainease.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.maintainease.data.entities.MaintenanceWithAssignee
-import com.example.maintainease.data.entities.getCurrentUser
 import com.example.maintainease.repositories.MaintenanceRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -46,10 +45,4 @@ class OverviewScreenViewModel(private val repository: MaintenanceRepository) : V
     val cancelledMaintenances: StateFlow<List<MaintenanceWithAssignee>> = _maintenances.map { maintenances ->
         maintenances.filter { it.maintenance.status == "cancelled" }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-
-    // Private MutableStateFlow für den internen Zustand von currentUser
-    private val _currentUser = MutableStateFlow(getCurrentUser(1, 1))
-    fun updateCurrentUser(staffId: Int, teamId: Int) {
-        _currentUser.value = getCurrentUser(staffId, teamId)
-    }
 }

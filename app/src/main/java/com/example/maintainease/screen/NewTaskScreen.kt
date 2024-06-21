@@ -1,6 +1,5 @@
 package com.example.maintainease.screen
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.compose.foundation.layout.Box
@@ -36,7 +35,6 @@ import androidx.navigation.NavController
 import com.example.maintainease.data.InjectorUtils
 import com.example.maintainease.data.entities.Maintenance
 import com.example.maintainease.viewModel.NewTaskScreenViewModel
-import com.example.maintainease.widgets.CheckPermissions
 import com.example.maintainease.widgets.SimpleBottomAppBar
 import com.example.maintainease.widgets.SimpleTopAppBar
 import kotlinx.coroutines.launch
@@ -85,7 +83,7 @@ fun NewTaskScreen(
     var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
     var filledImageUri by remember { mutableStateOf<String?>(null) }
 
-    CheckPermissions(
+    /* CheckPermissions(
         permission = Manifest.permission.CAMERA,
         onPermissionGranted = {
             showCamera = true
@@ -93,7 +91,7 @@ fun NewTaskScreen(
         onPermissionDenied = {
             errorMessage = "Camera permission is required to use this feature."
         }
-    )
+    ) */
 
     Scaffold(
         topBar = {
@@ -150,7 +148,6 @@ fun NewTaskScreen(
                 })
 
             IsErrorFun(isError = isErrorLocation, errorMessage = errorMessage)
-            //   Text(text = "PLACEHOLDER")
             Row(modifier = Modifier.padding(start = 15.dp)) {
                 Text(
                     "Severity (Standard: Low): ",

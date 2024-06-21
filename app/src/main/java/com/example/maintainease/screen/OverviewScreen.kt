@@ -29,7 +29,6 @@ import com.example.maintainease.widgets.ListOfMaintenanceTask
 import com.example.maintainease.widgets.MyCheckbox
 import com.example.maintainease.widgets.SimpleBottomAppBar
 import com.example.maintainease.widgets.SimpleTopAppBar
-import com.example.maintainease.widgets.UserSelectionScreen
 
 
 data class UserSelection(
@@ -97,10 +96,6 @@ fun OverviewScreen(navController: NavController) {
         },
     ) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
-            item {
-                UserSelectionScreen(userSelection) { staffId, teamId ->
-                    overviewScreenViewModel.updateCurrentUser(staffId, teamId)}
-            }
             item {
                 Row(modifier = Modifier.padding(horizontal = 16.dp)) {
                     MyCheckbox(
