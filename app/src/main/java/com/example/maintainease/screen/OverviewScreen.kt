@@ -118,9 +118,9 @@ fun OverviewScreen(navController: NavController) {
             items(
                 listOf(
                     "Open" to filteredOpenMaintenances,
-                    "In Progress" to filteredInProgressMaintenances,
+                    "working" to filteredInProgressMaintenances,
                     "Done" to filteredDoneMaintenances,
-                    "Cancelled" to filteredCancelledMaintenances
+                    "cancelled" to filteredCancelledMaintenances
                 )
             ) { (name, items) ->
                 MaintenanceBox(

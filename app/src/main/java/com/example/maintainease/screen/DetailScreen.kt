@@ -1,6 +1,5 @@
 package com.example.maintainease.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,7 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.maintainease.data.InjectorUtils
 import com.example.maintainease.viewModel.DetailScreenViewModel
 import com.example.maintainease.widgets.CustomDivider
@@ -128,12 +126,16 @@ fun DetailScreen(
                                     selectedStatusChange = "open"
                                     dropDownexpanded = false
                                 })
-                                DropdownMenuItem(text = { Text("in Progress") }, onClick = {
-                                    selectedStatusChange = "in progress"
+                                DropdownMenuItem(text = { Text("working") }, onClick = {
+                                    selectedStatusChange = "working"
                                     dropDownexpanded = false
                                 })
                                 DropdownMenuItem(text = { Text("Done") }, onClick = {
                                     selectedStatusChange = "done"
+                                    dropDownexpanded = false
+                                })
+                                DropdownMenuItem(text = { Text("cancel") }, onClick = {
+                                    selectedStatusChange = "cancelled"
                                     dropDownexpanded = false
                                 })
                             }

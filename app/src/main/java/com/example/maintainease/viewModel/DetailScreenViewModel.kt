@@ -38,7 +38,7 @@ class DetailScreenViewModel(
     }
 
     suspend fun assignToMe() {
-        getCurrentUser(1,1)["staffId"]?.let { repository.assignToMe(taskId, it) }
+        getCurrentUser(1,2)["staffId"]?.let { repository.assignToMe(taskId, it) }
     }
 
     suspend fun addComment(comment: String) {

@@ -8,7 +8,7 @@ import com.example.maintainease.repositories.MaintenanceRepository
 class NewTaskScreenViewModel(private val repository: MaintenanceRepository) : ViewModel() {
 
     suspend fun addMaintenance(maintenance: Maintenance){
-        getCurrentUser(1,1)["teamId"]?.let { maintenance.teamId = it }
+        getCurrentUser(1,2)["teamId"]?.let { maintenance.teamId = it }
         repository.addMaintenanceWithRelation(maintenance)
     }
 }
