@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 @Database(
     entities = [Maintenance::class, Team::class, Staff::class,
         TeamStaffRelation::class, StaffMaintenanceRelation::class],
-    version = 9,
+    version = 15,
     exportSchema = false
 )
 
@@ -65,7 +65,7 @@ abstract class MaintenanceDB : RoomDatabase() {
                 val initialMaintenanceTasks = getMaintenance()
                 val initialStaff = getStaff()
                 val initialTeams = getTeam()
-                val currentUser = getCurrentUser()
+                val currentUser = getCurrentUser(1,2)
                 val maintenanceRepository = MaintenanceRepository(maintenanceDAO, staffDAO, teamDAO)
 
                 initialMaintenanceTasks.forEach { o ->

@@ -30,11 +30,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import coil.compose.rememberAsyncImagePainter
 import com.example.maintainease.NavigationHandling
 import com.example.maintainease.data.entities.MaintenanceWithAssignee
 import com.example.maintainease.data.entities.dateFormat
@@ -73,7 +73,6 @@ fun MaintenanceTask(
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 6.dp)
             .clickable {
-                //navController.navigate(NavigationHandling.Detail.createRoute(maintenanceWithAssignee.maintenance.id))
                 onItemClick(maintenanceWithAssignee.maintenance.id)
             },
         shape = ShapeDefaults.Large,
@@ -139,6 +138,7 @@ fun MaintenanceDetails(
 
 @Composable
 fun MaintenanceCardHeader(maintenanceWithAssignee: MaintenanceWithAssignee) {
+    /*
     Box(
         modifier = Modifier
             .height(150.dp)
@@ -149,6 +149,22 @@ fun MaintenanceCardHeader(maintenanceWithAssignee: MaintenanceWithAssignee) {
             Image(
                 modifier = Modifier.fillMaxWidth(),
                 painter = painterResource(id = picture),
+                contentDescription = "Picture of Task",
+                contentScale = ContentScale.Crop
+            )
+        }
+    }
+} */
+    Box(
+        modifier = Modifier
+            .height(150.dp)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        maintenanceWithAssignee.maintenance.picture?.let { picture ->
+            Image(
+                modifier = Modifier.fillMaxWidth(),
+                painter = rememberAsyncImagePainter(model = picture),
                 contentDescription = "Picture of Task",
                 contentScale = ContentScale.Crop
             )

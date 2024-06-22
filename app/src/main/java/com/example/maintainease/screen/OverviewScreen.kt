@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,24 +31,36 @@ import com.example.maintainease.widgets.SimpleBottomAppBar
 import com.example.maintainease.widgets.SimpleTopAppBar
 
 
+data class UserSelection(
+    var staffId: Int = 1,
+    var teamId: Int = 1
+)
+
 @Composable
 fun OverviewScreen(navController: NavController) {
+    // ViewModel initialization
     val context = LocalContext.current
     val overviewScreenViewModel: OverviewScreenViewModel =
         viewModel(factory = InjectorUtils.provideOverviewScreenViewModelFactory(context))
+
+    // Collecting state from ViewModel
     val openMaintenances by overviewScreenViewModel.openMaintenances.collectAsState()
     val inProgressMaintenances by overviewScreenViewModel.inProgressMaintenances.collectAsState()
     val doneMaintenances by overviewScreenViewModel.doneMaintenances.collectAsState()
     val cancelledMaintenances by overviewScreenViewModel.cancelledMaintenances.collectAsState()
 
-    // A single mutableStateOf for managing the checkboxes' states
+    // State for managing checkboxes
     var checkedState by remember { mutableStateOf(CheckedState.None) }
+
+    // State for user selection
+    var userSelection by remember { mutableStateOf(UserSelection()) }
+
+    // Filtering based on checkbox state
     var filteredOpenMaintenances = openMaintenances
     var filteredInProgressMaintenances = inProgressMaintenances
     var filteredDoneMaintenances = doneMaintenances
     var filteredCancelledMaintenances = cancelledMaintenances
 
-    // Update filtered lists based on the checkedState
     when (checkedState) {
         CheckedState.MyTasks -> {
             filteredOpenMaintenances =
@@ -86,13 +97,6 @@ fun OverviewScreen(navController: NavController) {
     ) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
             item {
-                Text(
-                    text = "Maintenance Tasks",
-                    modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.headlineSmall
-                )
-            }
-            item {
                 Row(modifier = Modifier.padding(horizontal = 16.dp)) {
                     MyCheckbox(
                         isChecked = checkedState == CheckedState.MyTasks,
@@ -111,12 +115,14 @@ fun OverviewScreen(navController: NavController) {
                     )
                 }
             }
-            items(listOf(
-                "Open" to filteredOpenMaintenances,
-                "In Progress" to filteredInProgressMaintenances,
-                "Done" to filteredDoneMaintenances,
-                "Cancelled" to filteredCancelledMaintenances
-            )) { (name, items) ->
+            items(
+                listOf(
+                    "Open" to filteredOpenMaintenances,
+                    "working" to filteredInProgressMaintenances,
+                    "Done" to filteredDoneMaintenances,
+                    "cancelled" to filteredCancelledMaintenances
+                )
+            ) { (name, items) ->
                 MaintenanceBox(
                     name = name,
                     items = items,
@@ -127,6 +133,7 @@ fun OverviewScreen(navController: NavController) {
         }
     }
 }
+
 
 enum class CheckedState {
     None,

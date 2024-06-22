@@ -1,12 +1,12 @@
 package com.example.maintainease.repositories
 
 import androidx.room.Transaction
-import com.example.maintainease.data.entities.Maintenance
 import com.example.maintainease.data.dao.MaintenanceDAO
-import com.example.maintainease.data.entities.MaintenanceWithAssignee
-import com.example.maintainease.data.entities.Staff
 import com.example.maintainease.data.dao.StaffDAO
 import com.example.maintainease.data.dao.TeamDAO
+import com.example.maintainease.data.entities.Maintenance
+import com.example.maintainease.data.entities.MaintenanceWithAssignee
+import com.example.maintainease.data.entities.Staff
 import com.example.maintainease.data.entities.getCurrentUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO, private val staffDAO: StaffDAO, private val teamDAO: TeamDAO) {
-    val currentUser = getCurrentUser()
+    val currentUser = getCurrentUser(1,1)
 
     @Transaction
     suspend fun addMaintenanceWithRelation(maintenance: Maintenance) {

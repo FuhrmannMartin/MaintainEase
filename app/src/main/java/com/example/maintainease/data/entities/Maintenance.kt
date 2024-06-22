@@ -30,68 +30,96 @@ class MaintenanceWithAssignee(
 val locale = Locale("German", "Austria")
 val dateFormat = SimpleDateFormat("dd.MM.yyyy", locale)
 
+//  Gardening = TeamId 1, Electrician = TeamId 2
+// Options for status: open, working, done, cancel
+// Options for severity: high, middle, low
 fun getMaintenance(): List<Maintenance> {
     return listOf(
         Maintenance(
-            title = "Lampe Kaputt",
-            location = "2. Stock Raum A.101",
-            date = dateFormat.parse("12.05.2024"),
+            title = "Mowing the lawn",
+            location = "Rose-Garden",
+            date = dateFormat.parse("18.06.2024"),
             severity = "low",
             status = "open",
-            description = "Die Lampe muss ausgetauscht werden E27",
-            picture = R.drawable.lampe_task,
+            description = "Please mow the law at the Rose-Garden",
+            picture = R.drawable.rose_garden,
             teamId = 1,
             comments = emptyList()
         ),
         Maintenance(
-            title = "Gelände lose",
-            location = "Streppenhaus von Gebäude A, 1. Stock",
-            date = dateFormat.parse("13.05.2024"),
+            title = "Plant flowers",
+            location = "C.4.50 Balcony",
+            date = dateFormat.parse("18.06.2024"),
             severity = "high",
-            status = "open",
-            description = "Das Gelände ist lose, gehen darauf ist sehr gefährlich",
-            picture = R.drawable.treppenhaus_task,
+            status = "working",
+            description = "The customer complained, that the flowers in Room C.4.50 are dead. Please Replace Flowers",
+            picture = R.drawable.c_4_50_balcony,
             teamId = 1,
+            comments = emptyList()
         ),
         Maintenance(
-            title = "Wand verschmutzt",
-            location = "1. Stock Raum B.022",
-            date = dateFormat.parse("14.05.2024"),
+            title = "Pruning shrubs",
+            location = "Labyrinth-Garden",
+            date = dateFormat.parse("18.06.2024"),
             severity = "low",
-            status = "open",
-            description = "Wand ist schmutzig, muss neu angestrichen werden.",
-            picture = R.drawable.wand_task,
+            status = "cancelled",
+            description = "The shrubs need regular maintenance ",
+            picture = R.drawable.labyrinth_garden,
             teamId = 1,
+            comments = emptyList()
         ),
         Maintenance(
-            title = "Toilette verstopft",
-            location = "4. Stock Raum C.01",
-            date = dateFormat.parse("14.05.2024"),
-            severity = "middle",
-            status = "in progress",
-            description = "Bitte entstopfen",
-            picture = R.drawable.wc_task,
-            teamId = 1,
-        ),
-        Maintenance(
-            title = "Test",
-            location = "4. Stock Raum C.02",
-            date = dateFormat.parse("14.05.2025"),
-            severity = "low",
-            status = "in progress",
-            description = "Bitte entstopfen",
-            picture = R.drawable.laser_task,
-            teamId = 1,
-        ),
-        Maintenance(
-            title = "Laser kaputt",
-            location = "5. Stock Raum D.104",
-            date = dateFormat.parse("10.05.2024"),
+            title = "Water entry plants",
+            location = "E.0.0",
+            date = dateFormat.parse("13.05.2024"),
             severity = "middle",
             status = "done",
-            description = "Laser im Labor ist kaputt, muss ausgetauscht werden",
-            picture = R.drawable.laser_task,
+            description = "Watering for the Plants in the Entry needed",
+            picture = R.drawable.e_0_0,
             teamId = 1,
+        ),
+        Maintenance(
+            title = "Work on broken elevator",
+            location = "El.1",
+            date = dateFormat.parse("10.06.2024"),
+            severity = "high",
+            status = "open",
+            description = "The Nr. 1 Elevator is broken and is very important to transport our guests. Highest priority",
+            picture = R.drawable.el_1,
+            teamId = 2,
+            comments = emptyList()
+        ),
+        Maintenance(
+            title = "Change Light-Bulbs",
+            location = "A.3.40",
+            date = dateFormat.parse("18.06.2024"),
+            severity = "middle",
+            status = "done",
+            description = "In a Guest Room in Truck A the reading lamp is not working.",
+            picture = R.drawable.a_3_40,
+            teamId = 2,
+            comments = emptyList()
+        ),
+        Maintenance(
+            title = "Replace Cabling",
+            location = "M.4.10",
+            date = dateFormat.parse("18.06.2024"),
+            severity = "low",
+            status = "working",
+            description = "The cables in the Meeting Room are already pretty old and often have loose contact",
+            picture = R.drawable.m_4_10,
+            teamId = 2,
+            comments = emptyList()
+        ),
+        Maintenance(
+            title = "Troubleshoot Phone",
+            location = "B.2.14",
+            date = dateFormat.parse("13.05.2024"),
+            severity = "high",
+            status = "cancelled",
+            description = "The Phone in the Guest Room can't call the reception but other numbers. Reason unknown.",
+            picture = R.drawable.b_2_14,
+            teamId = 2,
         )
     )
 

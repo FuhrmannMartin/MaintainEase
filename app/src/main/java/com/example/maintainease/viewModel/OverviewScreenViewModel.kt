@@ -33,7 +33,7 @@ class OverviewScreenViewModel(private val repository: MaintenanceRepository) : V
 
 
     val inProgressMaintenances: StateFlow<List<MaintenanceWithAssignee>> = _maintenances.map { maintenances ->
-        maintenances.filter { it.maintenance.status == "in progress" }
+        maintenances.filter { it.maintenance.status == "working" }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
 
@@ -45,5 +45,4 @@ class OverviewScreenViewModel(private val repository: MaintenanceRepository) : V
     val cancelledMaintenances: StateFlow<List<MaintenanceWithAssignee>> = _maintenances.map { maintenances ->
         maintenances.filter { it.maintenance.status == "cancelled" }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-
 }
