@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO, private val staffDAO: StaffDAO, private val teamDAO: TeamDAO) {
-    private var currentUser: Map<String, Int> = mapOf("staffId" to 2, "teamId" to 2)
+    private var currentUser: Map<String, Int> = mapOf("staffId" to 0, "teamId" to 0)
 
     fun setCurrentUser(user: Map<String, Int>) {
         currentUser = user
