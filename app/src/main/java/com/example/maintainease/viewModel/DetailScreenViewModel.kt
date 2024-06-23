@@ -8,7 +8,6 @@ import com.example.maintainease.NavigationHandling
 import com.example.maintainease.data.entities.Maintenance
 import com.example.maintainease.data.entities.MaintenanceWithAssignee
 import com.example.maintainease.data.entities.Staff
-import com.example.maintainease.data.entities.getCurrentUser
 import com.example.maintainease.repositories.MaintenanceRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,7 +37,7 @@ class DetailScreenViewModel(
     }
 
     suspend fun assignToMe() {
-        getCurrentUser(1,2)["staffId"]?.let { repository.assignToMe(taskId, it) }
+        repository.getCurrentUser()["staffId"]?.let { repository.assignToMe(taskId, it) }
     }
 
     suspend fun addComment(comment: String) {

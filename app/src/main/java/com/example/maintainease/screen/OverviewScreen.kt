@@ -31,11 +31,6 @@ import com.example.maintainease.widgets.SimpleBottomAppBar
 import com.example.maintainease.widgets.SimpleTopAppBar
 
 
-data class UserSelection(
-    var staffId: Int = 1,
-    var teamId: Int = 1
-)
-
 @Composable
 fun OverviewScreen(navController: NavController) {
     // ViewModel initialization
@@ -51,9 +46,6 @@ fun OverviewScreen(navController: NavController) {
 
     // State for managing checkboxes
     var checkedState by remember { mutableStateOf(CheckedState.None) }
-
-    // State for user selection
-    var userSelection by remember { mutableStateOf(UserSelection()) }
 
     // Filtering based on checkbox state
     var filteredOpenMaintenances = openMaintenances

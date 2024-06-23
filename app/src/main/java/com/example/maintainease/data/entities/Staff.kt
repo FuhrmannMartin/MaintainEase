@@ -23,7 +23,3 @@ fun getStaff(): List<Staff> {
         )
     )
 }
-
-fun getCurrentUser(staffId: Int, teamId: Int): Map<String, Int> {
-    return mapOf("staffId" to staffId, "teamId" to teamId)
-}

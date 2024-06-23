@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class OverviewScreenViewModel(private val repository: MaintenanceRepository) : ViewModel() {
     private val _maintenances = MutableStateFlow<List<MaintenanceWithAssignee>>(emptyList())
-    val currentUser = repository.currentUser
+    val currentUser = repository.getCurrentUser()
 
     init {
         viewModelScope.launch {

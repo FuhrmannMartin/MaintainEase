@@ -58,7 +58,7 @@ fun DetailScreen(
     val maintenanceTask by detailScreenViewModel.maintenance.collectAsState()
     val assignee by detailScreenViewModel.assignee.collectAsState()
 
-    var dropDownexpanded by remember { mutableStateOf(false) }
+    var dropDownExpanded by remember { mutableStateOf(false) }
     var selectedStatusChange by remember { mutableStateOf("Change Status") }
 
     Scaffold(
@@ -114,29 +114,29 @@ fun DetailScreen(
                     Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
                         if (assignee?.id != null) {
                             Button(
-                                onClick = { dropDownexpanded = true },
+                                onClick = { dropDownExpanded = true },
                                 modifier = Modifier.align(Alignment.Center)
                             ) {
                                 Text(selectedStatusChange)
                             }
                             DropdownMenu(
-                                expanded = dropDownexpanded,
-                                onDismissRequest = { dropDownexpanded = false }) {
+                                expanded = dropDownExpanded,
+                                onDismissRequest = { dropDownExpanded = false }) {
                                 DropdownMenuItem(text = { Text("open") }, onClick = {
                                     selectedStatusChange = "open"
-                                    dropDownexpanded = false
+                                    dropDownExpanded = false
                                 })
                                 DropdownMenuItem(text = { Text("working") }, onClick = {
                                     selectedStatusChange = "working"
-                                    dropDownexpanded = false
+                                    dropDownExpanded = false
                                 })
                                 DropdownMenuItem(text = { Text("Done") }, onClick = {
                                     selectedStatusChange = "done"
-                                    dropDownexpanded = false
+                                    dropDownExpanded = false
                                 })
                                 DropdownMenuItem(text = { Text("cancel") }, onClick = {
                                     selectedStatusChange = "cancelled"
-                                    dropDownexpanded = false
+                                    dropDownExpanded = false
                                 })
                             }
                         }
