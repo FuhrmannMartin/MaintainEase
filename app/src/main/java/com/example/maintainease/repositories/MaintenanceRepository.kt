@@ -1,5 +1,6 @@
 package com.example.maintainease.repositories
 
+import android.util.Log
 import androidx.room.Transaction
 import com.example.maintainease.data.dao.MaintenanceDAO
 import com.example.maintainease.data.dao.StaffDAO
@@ -7,7 +8,7 @@ import com.example.maintainease.data.dao.TeamDAO
 import com.example.maintainease.data.entities.Maintenance
 import com.example.maintainease.data.entities.MaintenanceWithAssignee
 import com.example.maintainease.data.entities.Staff
-import com.example.maintainease.data.entities.getCurrentUser
+import com.example.maintainease.data.entities.Team
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -16,7 +17,24 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO, private val staffDAO: StaffDAO, private val teamDAO: TeamDAO) {
-    val currentUser = getCurrentUser(1,1)
+    private var currentUser: Map<String, Int> = mapOf("staffId" to 0, "teamId" to 0)
+
+    fun setCurrentUser(user: Map<String, Int>) {
+        currentUser = user
+    }
+
+    fun getCurrentUser(): Map<String, Int> {
+        return currentUser
+    }
+
+    fun getFullStaff(): Flow<List<Staff>?> {
+        return staffDAO.getFullStaff()
+    }
+
+    fun getAllTeams(): Flow<List<Team>?> {
+        return teamDAO.getAllTeams()
+    }
+
 
     @Transaction
     suspend fun addMaintenanceWithRelation(maintenance: Maintenance) {
@@ -30,6 +48,8 @@ class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO, private 
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getAllMaintenanceWithAssignee(): Flow<List<MaintenanceWithAssignee>>? {
+        Log.d("LoginUI", "repo staff: ${currentUser["staffId"]}")
+        Log.d("LoginUI", "repo team: ${currentUser["teamId"]}")
         return currentUser["teamId"]?.let { teamId ->
             maintenanceDAO.getAllMaintenance(teamId).flatMapLatest { maintenances ->
                 val flows: List<Flow<MaintenanceWithAssignee>> = maintenances.map { maintenance ->
@@ -96,7 +116,6 @@ class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO, private 
     suspend fun deleteMaintenance(maintenance: Maintenance){
         maintenanceDAO.deleteMaintenance(maintenance)
     }
-
 
     companion object {
         @Volatile

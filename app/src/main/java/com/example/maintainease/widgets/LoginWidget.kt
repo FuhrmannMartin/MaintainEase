@@ -1,5 +1,6 @@
 package com.example.maintainease.widgets
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +14,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
@@ -30,11 +30,16 @@ fun LoginUI(viewModel: LoginScreenViewModel, onLoginSuccess: () -> Unit) {
     var selectedStaff by remember { mutableStateOf<Staff?>(null) }
     var selectedTeam by remember { mutableStateOf<Team?>(null) }
 
-    val coroutineScope = rememberCoroutineScope()
+
+    // Logging the state
+    Log.d("LoginUI", "staffList: $staffList")
+    Log.d("LoginUI", "teamList: $teamList")
+    Log.d("LoginUI", "selectedStaff: ${selectedStaff?.id}")
+    Log.d("LoginUI", "selectedTeam: ${selectedTeam?.id}")
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Select Staff")
-        staffList.forEach { staff ->
+        staffList?.forEach { staff ->
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -54,7 +59,7 @@ fun LoginUI(viewModel: LoginScreenViewModel, onLoginSuccess: () -> Unit) {
         }
 
         Text(text = "Select Team")
-        teamList.forEach { team ->
+        teamList?.forEach { team ->
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -75,12 +80,8 @@ fun LoginUI(viewModel: LoginScreenViewModel, onLoginSuccess: () -> Unit) {
 
         OutlinedButton(
             onClick = {
-                selectedStaff?.let { staff ->
-                    selectedTeam?.let { team ->
-                        viewModel.setCurrentUser(staff.id, team.id)
-                        onLoginSuccess()
-                    }
-                }
+                selectedStaff?.let { selectedTeam?.let { it1 -> viewModel.setCurrentUser(it.id, it1.id) } }
+                onLoginSuccess()
             },
             modifier = Modifier.padding(top = 16.dp)
         ) {

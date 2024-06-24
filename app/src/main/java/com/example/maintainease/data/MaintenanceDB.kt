@@ -14,7 +14,6 @@ import com.example.maintainease.data.entities.Staff
 import com.example.maintainease.data.entities.StaffMaintenanceRelation
 import com.example.maintainease.data.entities.Team
 import com.example.maintainease.data.entities.TeamStaffRelation
-import com.example.maintainease.data.entities.getCurrentUser
 import com.example.maintainease.data.entities.getMaintenance
 import com.example.maintainease.data.entities.getStaff
 import com.example.maintainease.data.entities.getTeam
@@ -65,7 +64,7 @@ abstract class MaintenanceDB : RoomDatabase() {
                 val initialMaintenanceTasks = getMaintenance()
                 val initialStaff = getStaff()
                 val initialTeams = getTeam()
-                val currentUser = getCurrentUser(1,2)
+                // val currentUser = getCurrentUser(1,2)
                 val maintenanceRepository = MaintenanceRepository(maintenanceDAO, staffDAO, teamDAO)
 
                 initialMaintenanceTasks.forEach { o ->
@@ -77,11 +76,11 @@ abstract class MaintenanceDB : RoomDatabase() {
                 initialTeams.forEach { o ->
                     teamDAO.addTeam(o)
                 }
-                currentUser["staffId"]?.let { currentUser["teamId"]?.let { it1 ->
-                    staffDAO.mapStaffToTeam(it,
-                        it1
-                    )
-                } }
+                //currentUser["staffId"]?.let { currentUser["teamId"]?.let { it1 ->
+                  //  staffDAO.mapStaffToTeam(it,
+                    //    it1
+                    //)
+                //} }
             }
         }
     }
