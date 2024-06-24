@@ -17,4 +17,7 @@ interface StaffDAO {
     @Query("Select * FROM Staff")
     fun getFullStaff(): Flow<List<Staff>?>
 
+    @Query("Select name FROM Staff WHERE id = :staffId")
+    fun getStaffName(staffId: Int): Flow<String>
+
 }

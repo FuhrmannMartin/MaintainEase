@@ -81,7 +81,12 @@ fun OverviewScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
-            SimpleTopAppBar(title = "MaintainEase")
+            SimpleTopAppBar(
+                title = "Maintain Ease",
+                onLogoutClick = {
+                    navController.navigate("login")
+                }
+            )
         },
         bottomBar = {
             SimpleBottomAppBar(navController = navController)
@@ -110,9 +115,9 @@ fun OverviewScreen(navController: NavController) {
             items(
                 listOf(
                     "Open" to filteredOpenMaintenances,
-                    "working" to filteredInProgressMaintenances,
+                    "Working" to filteredInProgressMaintenances,
                     "Done" to filteredDoneMaintenances,
-                    "cancelled" to filteredCancelledMaintenances
+                    "Cancelled" to filteredCancelledMaintenances
                 )
             ) { (name, items) ->
                 MaintenanceBox(
