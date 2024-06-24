@@ -28,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
@@ -59,7 +58,7 @@ fun DetailScreen(
     val currentUserName by detailScreenViewModel.currentUserName.collectAsState()
 
     var dropDownExpanded by remember { mutableStateOf(false) }
-    var selectedStatusChange by remember {  mutableStateOf("open")  }
+    var selectedStatusChange by remember {  mutableStateOf("Change Status!")  }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -89,9 +88,9 @@ fun DetailScreen(
                 }
             }
             item {
-                if (assignee?.id != null) {
+                if (assignee?.id == detailScreenViewModel.currentUserId) {
                     Column {
-                        Text(text = "Change Status:", modifier = Modifier.padding(start = 16.dp))
+                        // Text(text = "Change Status:", modifier = Modifier.padding(start = 16.dp))
                         Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
                             Button(
                                 onClick = { dropDownExpanded = true },
@@ -110,23 +109,25 @@ fun DetailScreen(
                                     selectedStatusChange = "working"
                                     dropDownExpanded = false
                                 })
-                                DropdownMenuItem(text = { Text("Done") }, onClick = {
+                                DropdownMenuItem(text = { Text("done") }, onClick = {
                                     selectedStatusChange = "done"
                                     dropDownExpanded = false
                                 })
-                                DropdownMenuItem(text = { Text("cancel") }, onClick = {
+                                DropdownMenuItem(text = { Text("cancelled") }, onClick = {
                                     selectedStatusChange = "cancelled"
                                     dropDownExpanded = false
                                 })
                             }
                         }
-                        detailScreenViewModel.viewModelScope.launch {
-                            try {
-                                selectedStatusChange.let { detailScreenViewModel.updateStatus(it) }
+                        if (selectedStatusChange != "Change Status!") {
+                            detailScreenViewModel.viewModelScope.launch {
+                                try {
+                                    selectedStatusChange.let { detailScreenViewModel.updateStatus(it) }
 
-                            } catch (e: Exception) {
-                                // Handle any exceptions if necessary
+                                } catch (e: Exception) {
+                                    // Handle any exceptions if necessary
 
+                                }
                             }
                         }
                     }
@@ -193,18 +194,20 @@ fun DetailScreen(
                             Text(text = "Assign to me")
                         }
                     } else {
-                        maintenanceTask?.let { task ->
-                            Button(
-                                onClick = {
-                                    detailScreenViewModel.viewModelScope.launch {
-                                        detailScreenViewModel.deleteTheTask(
-                                            task.maintenance,
-                                            navController
-                                        )
+                        if (assignee?.id == detailScreenViewModel.currentUserId) {
+                            maintenanceTask?.let { task ->
+                                Button(
+                                    onClick = {
+                                        detailScreenViewModel.viewModelScope.launch {
+                                            detailScreenViewModel.deleteTheTask(
+                                                task.maintenance,
+                                                navController
+                                            )
+                                        }
                                     }
+                                ) {
+                                    Text(text = "Delete Task!")
                                 }
-                            ) {
-                                Text(color = Color.Red, text = "Delete Task")
                             }
                         }
                     }

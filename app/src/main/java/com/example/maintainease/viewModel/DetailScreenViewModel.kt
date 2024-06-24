@@ -27,6 +27,7 @@ class DetailScreenViewModel(
     val assignee: StateFlow<Staff?> = _assignee
     private val _currentUserName = MutableStateFlow<String?>(null)
     val currentUserName: StateFlow<String?> = _currentUserName
+    val currentUserId = repository.getCurrentUser()["staffId"]
 
     init {
         viewModelScope.launch {
