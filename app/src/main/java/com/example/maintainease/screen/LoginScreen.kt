@@ -11,7 +11,7 @@ import androidx.navigation.NavController
 import com.example.maintainease.data.InjectorUtils
 import com.example.maintainease.viewModel.LoginScreenViewModel
 import com.example.maintainease.widgets.LoginUI
-import com.example.maintainease.widgets.SimpleTopAppBar
+import com.example.maintainease.widgets.SimpleTopAppBarLogin
 
 @Composable
 fun LoginScreen(
@@ -23,7 +23,7 @@ fun LoginScreen(
 
     Scaffold(
         topBar = {
-            SimpleTopAppBar(title = "Simple Login")
+            SimpleTopAppBarLogin(title = "Login")
         },
     ) { innerPadding ->
         Column( modifier = Modifier

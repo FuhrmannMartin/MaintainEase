@@ -1,7 +1,6 @@
 package com.example.maintainease.screen
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,7 +34,6 @@ import androidx.navigation.NavController
 import com.example.maintainease.data.InjectorUtils
 import com.example.maintainease.data.entities.Maintenance
 import com.example.maintainease.viewModel.NewTaskScreenViewModel
-import com.example.maintainease.widgets.SimpleBottomAppBar
 import com.example.maintainease.widgets.SimpleTopAppBar
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -64,7 +62,7 @@ fun NewTaskScreen(
     var isErrorDescription by remember { mutableStateOf(false) }
     var isErrorLocation by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
-    val errorMessageText = "Cannot save. Please fill out every Field"
+    val errorMessageText = "Make sure to fill out all fields"
 
     var textDescription by remember {
         mutableStateOf(TextFieldValue(""))
@@ -79,9 +77,6 @@ fun NewTaskScreen(
     val coroutineScope = rememberCoroutineScope()
 
     // Camera Stuff
-    var showCamera by remember { mutableStateOf(false) }
-    var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
-    var filledImageUri by remember { mutableStateOf<String?>(null) }
 
     /* CheckPermissions(
         permission = Manifest.permission.CAMERA,
@@ -95,10 +90,12 @@ fun NewTaskScreen(
 
     Scaffold(
         topBar = {
-            SimpleTopAppBar(title = "Add a new Maintenance Task")
-        },
-        bottomBar = {
-            SimpleBottomAppBar(navController = navController)
+            SimpleTopAppBar(
+                title = "Add a new Maintenance Task",
+                onLogoutClick = {
+                    navController.navigate("login")
+                }
+            )
         },
     ) { innerPadding ->
         Column(
@@ -108,7 +105,7 @@ fun NewTaskScreen(
         ) {
 
             OutlinedTextField(modifier = Modifier
-                .padding(all = 15.dp)
+                .padding(all = 5.dp)
                 .height(60.dp)
                 .fillMaxWidth(),
                 value = textTitle,
@@ -116,13 +113,13 @@ fun NewTaskScreen(
                 label = {
                     Text(text = "Title: ")
                     isErrorTitle = textTitle.text.isEmpty()
-                    errorMessage = if (isErrorTitle) errorMessageText else ""
+                    errorMessage = ""
                 })
 
             IsErrorFun(isError = isErrorTitle, errorMessage = errorMessage)
 
             OutlinedTextField(modifier = Modifier
-                .padding(all = 15.dp)
+                .padding(all = 3.dp)
                 .height(200.dp)
                 .fillMaxWidth(),
                 value = textDescription,
@@ -130,13 +127,13 @@ fun NewTaskScreen(
                 label = {
                     Text(text = "Description: ")
                     isErrorDescription = textDescription.text.isEmpty()
-                    errorMessage = if (isErrorDescription) errorMessageText else ""
+                    errorMessage = ""
                 })
 
             IsErrorFun(isError = isErrorDescription, errorMessage = errorMessage)
 
             OutlinedTextField(modifier = Modifier
-                .padding(all = 15.dp)
+                .padding(all = 3.dp)
                 .height(100.dp)
                 .fillMaxWidth(),
                 value = textLocation,
@@ -148,7 +145,7 @@ fun NewTaskScreen(
                 })
 
             IsErrorFun(isError = isErrorLocation, errorMessage = errorMessage)
-            Row(modifier = Modifier.padding(start = 15.dp)) {
+            Row(modifier = Modifier.padding(start = 3.dp)) {
                 Text(
                     "Severity (Standard: Low): ",
                     modifier = Modifier.padding(top = 15.dp, start = 20.dp)

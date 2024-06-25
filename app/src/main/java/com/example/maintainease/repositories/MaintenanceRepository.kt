@@ -35,15 +35,14 @@ class MaintenanceRepository(private val maintenanceDAO: MaintenanceDAO, private 
         return teamDAO.getAllTeams()
     }
 
+    fun getCurrentUserName(): Flow<String>? {
+        return currentUser["staffId"]?.let { staffDAO.getStaffName(it) }
+    }
 
     @Transaction
     suspend fun addMaintenanceWithRelation(maintenance: Maintenance) {
         val maintenanceId = maintenanceDAO.insertMaintenance(maintenance)
         maintenanceDAO.insertStaffMaintenanceRelation(maintenanceId)
-    }
-
-    fun getAllMaintenance(): Flow<List<Maintenance>>? {
-        return currentUser["teamId"]?.let { maintenanceDAO.getAllMaintenance(it) }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

@@ -80,8 +80,10 @@ fun LoginUI(viewModel: LoginScreenViewModel, onLoginSuccess: () -> Unit) {
 
         OutlinedButton(
             onClick = {
-                selectedStaff?.let { selectedTeam?.let { it1 -> viewModel.setCurrentUser(it.id, it1.id) } }
-                onLoginSuccess()
+                if (selectedStaff != null && selectedTeam != null) {
+                    viewModel.setCurrentUser(selectedStaff!!.id, selectedTeam!!.id)
+                    onLoginSuccess()
+                }
             },
             modifier = Modifier.padding(top = 16.dp)
         ) {

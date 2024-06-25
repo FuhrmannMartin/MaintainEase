@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class DetailScreenViewModel(
     private val repository: MaintenanceRepository,
@@ -22,6 +25,9 @@ class DetailScreenViewModel(
     val maintenance: StateFlow<MaintenanceWithAssignee?> = _maintenance
     private val _assignee = MutableStateFlow<Staff?>(null)
     val assignee: StateFlow<Staff?> = _assignee
+    private val _currentUserName = MutableStateFlow<String?>(null)
+    val currentUserName: StateFlow<String?> = _currentUserName
+    val currentUserId = repository.getCurrentUser()["staffId"]
 
     init {
         viewModelScope.launch {
@@ -32,6 +38,11 @@ class DetailScreenViewModel(
         viewModelScope.launch {
             repository.getAssignee(taskId).collectLatest { assignee ->
                 _assignee.value = assignee
+            }
+        }
+        viewModelScope.launch {
+            repository.getCurrentUserName()?.collectLatest { currentUserName ->
+                _currentUserName.value = currentUserName
             }
         }
     }
@@ -72,5 +83,11 @@ class DetailScreenViewModel(
                 Log.e("DetailScreenViewModel", "Error deleting task", e)
             }
         }
+    }
+
+    fun getCurrentTimestamp(): String {
+        val sdf = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault())
+        val currentTimestamp: String = sdf.format(Date())
+        return currentTimestamp
     }
 }

@@ -84,19 +84,24 @@ fun MaintenanceTask(
 
             if (currentDestination?.route?.startsWith("detail/") == true) {
                 MaintenanceCardHeader(maintenanceWithAssignee = maintenanceWithAssignee)
+                MaintenanceDetails(maintenanceWithAssignee = maintenanceWithAssignee, showDetailsInit = true)
+            } else {
+                MaintenanceDetails(
+                    maintenanceWithAssignee = maintenanceWithAssignee,
+                    showDetailsInit = false
+                )
             }
-
-            MaintenanceDetails(maintenanceWithAssignee = maintenanceWithAssignee)
         }
     }
 }
 
 @Composable
 fun MaintenanceDetails(
-    maintenanceWithAssignee: MaintenanceWithAssignee
+    maintenanceWithAssignee: MaintenanceWithAssignee,
+    showDetailsInit: Boolean
 ) {
     var showDetails by remember {
-        mutableStateOf(false)
+        mutableStateOf(showDetailsInit)
     }
 
     Row(
@@ -129,6 +134,7 @@ fun MaintenanceDetails(
                     }
                 }"
             )
+            Text(text = "Assignee: ${maintenanceWithAssignee.assignee?.name}")
             Text(text = "Severity: ${maintenanceWithAssignee.maintenance.severity}")
             Text(text = "Status: ${maintenanceWithAssignee.maintenance.status}")
             Text(text = "Description: ${maintenanceWithAssignee.maintenance.description}")

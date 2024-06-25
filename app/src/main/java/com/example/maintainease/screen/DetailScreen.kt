@@ -1,13 +1,11 @@
 package com.example.maintainease.screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -30,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
@@ -38,13 +35,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.maintainease.data.InjectorUtils
 import com.example.maintainease.viewModel.DetailScreenViewModel
-import com.example.maintainease.widgets.CustomDivider
 import com.example.maintainease.widgets.MaintenanceTask
 import com.example.maintainease.widgets.SimpleBottomAppBar
 import com.example.maintainease.widgets.SimpleTopAppBar
 import kotlinx.coroutines.launch
 
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun DetailScreen(
     taskId: Int,
@@ -58,8 +55,10 @@ fun DetailScreen(
     val maintenanceTask by detailScreenViewModel.maintenance.collectAsState()
     val assignee by detailScreenViewModel.assignee.collectAsState()
 
+    val currentUserName by detailScreenViewModel.currentUserName.collectAsState()
+
     var dropDownExpanded by remember { mutableStateOf(false) }
-    var selectedStatusChange by remember { mutableStateOf("Change Status") }
+    var selectedStatusChange by remember {  mutableStateOf("Change Status!")  }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -70,6 +69,9 @@ fun DetailScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back Icon")
                     }
+                },
+                onLogoutClick = {
+                    navController.navigate("login")
                 }
             )
         },
@@ -86,33 +88,10 @@ fun DetailScreen(
                 }
             }
             item {
-                CustomDivider()
-            }
-            item {
-                Box(modifier = Modifier.padding(start = 16.dp)) {
-                    if (assignee?.id == null) {
-                        Button(
-                            onClick = { detailScreenViewModel.viewModelScope.launch { detailScreenViewModel.assignToMe() } },
-                        ) {
-                            Text(text = "Assign to me")
-                        }
-                    } else {
-                        Box(
-                            modifier = Modifier.align(Alignment.CenterStart)
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(text = "Assigned to ${assignee?.name}!")
-                                Spacer(modifier = Modifier.width(16.dp)) // Add some space between the button and the text
-                            }
-                        }
-                    }
-                }
-            }
-
-            item {
-                Row {
-                    Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
-                        if (assignee?.id != null) {
+                if (assignee?.id == detailScreenViewModel.currentUserId) {
+                    Column {
+                        // Text(text = "Change Status:", modifier = Modifier.padding(start = 16.dp))
+                        Box(modifier = Modifier.padding(15.dp, bottom = 0.dp)) {
                             Button(
                                 onClick = { dropDownExpanded = true },
                                 modifier = Modifier.align(Alignment.Center)
@@ -130,48 +109,36 @@ fun DetailScreen(
                                     selectedStatusChange = "working"
                                     dropDownExpanded = false
                                 })
-                                DropdownMenuItem(text = { Text("Done") }, onClick = {
+                                DropdownMenuItem(text = { Text("done") }, onClick = {
                                     selectedStatusChange = "done"
                                     dropDownExpanded = false
                                 })
-                                DropdownMenuItem(text = { Text("cancel") }, onClick = {
+                                DropdownMenuItem(text = { Text("cancelled") }, onClick = {
                                     selectedStatusChange = "cancelled"
                                     dropDownExpanded = false
                                 })
                             }
                         }
-                    }
-                    var statusUpdateSuccess by remember { mutableStateOf(false) }
-
-                    if (selectedStatusChange != "Change Status") {
-                        Button(onClick = {
+                        if (selectedStatusChange != "Change Status!") {
                             detailScreenViewModel.viewModelScope.launch {
                                 try {
-                                    detailScreenViewModel.updateStatus(selectedStatusChange)
-                                    statusUpdateSuccess = true // Update success status
+                                    selectedStatusChange.let { detailScreenViewModel.updateStatus(it) }
+
                                 } catch (e: Exception) {
                                     // Handle any exceptions if necessary
-                                    statusUpdateSuccess = false // Update failure status
+
                                 }
                             }
-                        }) {
-                            Text("Confirm")
-                        }
-                        if (statusUpdateSuccess && selectedStatusChange == maintenanceTask?.maintenance?.status) {
-                            Text("Success Status Update!")
                         }
                     }
                 }
-            }
-            item {
-                CustomDivider()
             }
 
             item {
                 Text(text = "Comments:", modifier = Modifier.padding(start = 16.dp))
             }
             item {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(8.dp)) {
                     val comments = maintenanceTask?.maintenance?.comments
 
                     if (comments != null) {
@@ -180,11 +147,13 @@ fun DetailScreen(
                                 Card(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 8.dp, vertical = 6.dp),
-                                    shape = ShapeDefaults.Large,
+                                        .padding(horizontal = 16.dp, vertical = 6.dp),
+                                    shape = ShapeDefaults.ExtraLarge,
                                     elevation = CardDefaults.cardElevation(10.dp)
                                 ) {
-                                    Text(text = comment)
+                                    Text(text = comment,
+                                            modifier = Modifier
+                                            .padding(16.dp))
                                 }
                             }
                         } else {
@@ -207,26 +176,39 @@ fun DetailScreen(
                         onClick = {
                             detailScreenViewModel.viewModelScope.launch {
                                 detailScreenViewModel.addComment(
-                                    comment
+                                    currentUserName + ", " + detailScreenViewModel.getCurrentTimestamp() + ":" + System.lineSeparator() + comment
                                 )
                             }
                         },
                     ) {
                         Text(text = "Add new comment!")
                     }
-
-                    maintenanceTask?.let { task ->
+                }
+            }
+            item {
+                Box(modifier = Modifier.padding(start = 16.dp)) {
+                    if (assignee?.id == null) {
                         Button(
-                            onClick = {
-                                detailScreenViewModel.viewModelScope.launch {
-                                    detailScreenViewModel.deleteTheTask(
-                                        task.maintenance,
-                                        navController
-                                    )
+                            onClick = { detailScreenViewModel.viewModelScope.launch { detailScreenViewModel.assignToMe() } },
+                        ) {
+                            Text(text = "Assign to me")
+                        }
+                    } else {
+                        if (assignee?.id == detailScreenViewModel.currentUserId) {
+                            maintenanceTask?.let { task ->
+                                Button(
+                                    onClick = {
+                                        detailScreenViewModel.viewModelScope.launch {
+                                            detailScreenViewModel.deleteTheTask(
+                                                task.maintenance,
+                                                navController
+                                            )
+                                        }
+                                    }
+                                ) {
+                                    Text(text = "Delete Task!")
                                 }
                             }
-                        ) {
-                            Text(color = Color.Red, text = "Delete Task")
                         }
                     }
                 }

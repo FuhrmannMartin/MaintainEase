@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -34,7 +36,37 @@ import com.example.maintainease.NavigationHandling
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SimpleTopAppBar(title: String, navigationIcon: @Composable (() -> Unit)? = null) {
+fun SimpleTopAppBar(
+    title: String,
+    navigationIcon: @Composable (() -> Unit)? = null,
+    onLogoutClick: () -> Unit
+) {
+    TopAppBar(
+        modifier = Modifier.fillMaxWidth(),
+        title = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = title)
+            }
+        },
+        navigationIcon = navigationIcon ?: {},
+        actions = {
+            IconButton(onClick = onLogoutClick) {
+                Icon(
+                    imageVector = Icons.Default.ExitToApp, // Use an appropriate logout icon
+                    contentDescription = "Logout"
+                )
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SimpleTopAppBarLogin(title: String, navigationIcon: @Composable (() -> Unit)? = null) {
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
         title = {
